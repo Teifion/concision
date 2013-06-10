@@ -37,6 +37,7 @@ class ConcisionSource(object):
         self.query_as_single = kwargs.get('query_as_single', True)
         self.query_as_aggregate = kwargs.get('query_as_aggregate', True)
         self.column_labels = kwargs.get('column_labels', {})
+        self.column_converters = kwargs.get('column_converters', {})
         
         self.aliases = kwargs.get('aliases', {})
         

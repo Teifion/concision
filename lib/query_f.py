@@ -1,10 +1,10 @@
 import json
 from decimal import Decimal
-from ..lib import html_f, consts
 from .. import config
 from sqlalchemy.orm import aliased
 import datetime
 import re
+from . import converters, html_f, consts
 
 from sqlalchemy.types import (
     Integer as sql_integer,
@@ -149,7 +149,16 @@ def build(data):
         filter_col = q.get(f['column'])
         op_func = getattr(filter_col, consts.operator_lookup[f['operator']])
         
-        value = typecast(q.get(f['column'], use_alias=False), f['value'])
+        t, c = f['column'].split(".")
+        source_table = config['sources'][t]
+        # config['sources'][table]
+        # if column in table_source.aliases:
+        
+        value = converters.convert(f['value'], source_table.column_converters.get(c))
+        # value = convert_value(f['value'], [])
+        
+        value = typecast(q.get(f['column'], use_alias=False), value)
+        
         q.filters.append(op_func(value))
     
     # TODO desc/asc
