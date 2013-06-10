@@ -1,0 +1,14 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton" href="${request.route_url('concision.docs.menu')}">Documentation home</a>
+    </div>
+    <div metal:fill-slot="content">
+        
+        
+        
+    </div>
+</div>

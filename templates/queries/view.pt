@@ -1,0 +1,37 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('concision.menu')}">Concision home</a>
+    </div>
+    <div metal:fill-slot="content">
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var $tabs = $("#query_type").tabs();
+            });
+        </script>
+        
+        <a href="${request.route_url('concision.query.export', query_id=query_id)}" class="inbutton" style="float:right">Export</a>
+        <a href="${request.route_url('concision.query.graph', query_id=query_id)}" class="inbutton" style="float:right" tal:condition="data['key'] != None">Graph</a>
+        
+        <a href="${request.route_url('concision.query.edit', query_id=query_id)}" class="inbutton">Edit</a>
+        <br /><br />
+        
+        <table border="0" cellspacing="0" cellpadding="5">
+            <tr tal:condition="False">
+                <th>${data['key']} (Key)</th>
+                <th tal:repeat="c data['columns']">${c}</th>
+            </tr>
+            <tr tal:condition="True">
+                <th tal:repeat="h table_headers">${h}</th>
+            </tr>
+            <tr tal:repeat="r results">
+                <td tal:repeat="c r">${c}</td>
+            </tr>
+        </table>
+        
+    </div>
+    
+    
+</div>

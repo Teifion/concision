@@ -1,0 +1,107 @@
+<div metal:use-macro="layout">
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('concision.menu')}">Concision home</a>
+    </div>
+    <div metal:fill-slot="content">
+        <script src="${request.static_url('dashboard:static/js/highcharts/highcharts.js')}" type="text/javascript" charset="utf-8"></script>
+        
+        <script type="text/javascript" charset="utf-8">
+            $(function () {
+                chart = new Highcharts.Chart(
+                {
+                    credits: false,
+                    colors: [
+                        '#79C54E',
+                        '#4572A7',
+                        '#AA4643',
+                        
+                        '#3D96AE',
+                        
+                        '#A47D7C',
+                        '#333333',
+                        '#CCCCCC',
+                        '#FF0000',
+                        '#00FF00',
+                        '#0000FF',
+                        '#FFFF00',
+                        '#00FFFF',
+                        '#FF00FF',
+                    ],
+                    chart: {
+                        renderTo: "container",
+                        zoomType: 'x',
+                        spacingRight: 20,
+                        type: "line",
+                    },
+                    title: {
+                        text: "Graph title",
+                    },
+                    subtitle: {
+                        text: 'Click and drag in the plot area to zoom in'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        maxZoom: 7 * 24 * 60 * 60 * 1000,
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Values'
+                        },
+                        min: 0,
+                        //max: 11,
+                        startOnTick: false,
+                        showFirstLabel: false
+                    },
+                    tooltip: {
+                        shared: true
+                    },
+                    legend: {
+                        enabled: true
+                    },
+                    plotOptions: {
+                        series: {pointStart: ${graph_data['start_date']}},
+                        area: {
+                            pointStart: ${graph_data['start_date']},
+                            
+                            lineWidth: 1,
+                            marker: {
+                                enabled: false,
+                                states: {
+                                    hover: {
+                                        enabled: true,
+                                        radius: 5
+                                    }
+                                }
+                            },
+                            shadow: false,
+                            states: {
+                                hover: {
+                                    lineWidth: 1
+                                }
+                            }
+                        }
+                    },
+                    series: ${graph_data['series']}
+                });
+            });
+        </script>
+        
+        <a href="${request.route_url('concision.query.export', query_id=query_id)}" class="inbutton" style="float:right">Export</a>
+        <a href="${request.route_url('concision.query.view', query_id=query_id)}" class="inbutton" style="float:right">Table view</a>
+        
+        <div class="inbutton" id="edit_show" onclick="$('#edit_show').hide(); $('#edit_buttons').show();">
+            Edit
+        </div>
+        <div id="edit_buttons" style="display:none;">
+            <a href="${request.route_url('concision.query.columns', query_id=query_id)}" class="inbutton">Columns</a>
+            <a href="${request.route_url('concision.query.key', query_id=query_id)}" class="inbutton">Key</a>
+            <a href="${request.route_url('concision.query.filters', query_id=query_id)}" class="inbutton">Filters</a>
+        </div>
+        <br /><br />
+        
+        <div id="container" style="width: 100%; height: 400px"></div>
+    </div>
+</div>

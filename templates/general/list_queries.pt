@@ -1,0 +1,30 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton" href="${request.route_url('concision.menu')}">Concision home</a>
+    </div>
+    
+    <div metal:fill-slot="content" style="padding:0px;">
+        <a href="${request.route_url('concision.query.new')}" class="inbutton">New query</a>
+        <br /><br />
+        <table cellspacing="0" cellpadding="5" style="width:100%;">
+            <tr class="row2">
+                <th>Name</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr tal:repeat="the_query query_list" tal:attributes="class 'row%s' % (repeat.the_query.index%2)">
+                <td>${the_query.name}</td>
+                <td class="button_cell" tal:condition="True or the_query.complete">
+                    <a href="${request.route_url('concision.query.view', query_id=the_query.id)}" class="inbutton">View</a>
+                </td>
+                <td class="button_cell" tal:condition="True or not the_query.complete">
+                    <a href="${request.route_url('concision.query.edit', query_id=the_query.id)}" class="inbutton">Edit</a>
+                </td>
+            </tr>
+        </table>
+        <br />
+    </div>
+</div>
