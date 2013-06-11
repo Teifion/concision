@@ -10,8 +10,8 @@
     </style>
     <script type="text/javascript" charset="utf-8" metal:fill-slot="js">
         $(document).ready(function() {
-        
-        });
+                $('#name').focus();
+            });
     </script>
     
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
@@ -19,12 +19,6 @@
         <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        <div id="side_tooltip" class="tooltip_right" tal:condition="False">
-            <div id="source_tooltip">
-                &nbsp;
-            </div>
-        </div>
-        
         <h2>Pick a name for the query</h2>
         <br />
         <form action="${request.route_url('concision.query.new')}" method="post" accept-charset="utf-8">
@@ -34,14 +28,6 @@
             
             <input type="submit" value="Next" name="form.submitted" class="inbutton" />
         </form>
-        
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-                $('#name').focus();
-                
-                //$('#source_tooltip').load("${request.route_url('concision.tooltip', page='sources')}");
-            });
-        </script>
     </div>
     
     
