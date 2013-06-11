@@ -22,6 +22,7 @@
                 $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
                 $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
                 $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
+                $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
             });
         </script>
         
@@ -36,8 +37,39 @@
                 <li><a href="#columns">Columns</a></li>
                 <li><a href="#key">Key</a></li>
                 <li><a href="#filters">Filters</a></li>
+                <li><a href="#groupby">Grouping</a></li>
                 <li><a href="#other">Other</a></li>
             </ul>
+            
+            <div id="columns">
+                <div class="tooltip_right">
+                    <div id="columns_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <form action="${request.route_url('concision.query.edit_columns', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                    <table border="0" cellspacing="0" cellpadding="5">
+                        <div tal:repeat="(s, the_source) sources.items()">
+                            <div tal:condition="s in data['sources']">
+                                
+                            <tr>
+                                <td colspan="2" style="text-align:center;">
+                                    <strong>${the_source.label}</strong>
+                                </td>
+                            </tr>
+                            <tr tal:repeat="c the_source.columns">
+                                <td><label for="${s}.${c}_col">${the_source.column_labels[c]}</label></td>
+                                <td><input type="checkbox" name="${s}.${c}" id="${s}.${c}_col" value="true" tal:attributes="checked '%s.%s' % (s, c) in data.get('columns', [])"/></td>
+                            </tr>
+                            </div>
+                        </div>
+                    </table>
+                    
+                    <input type="submit" value="Save column changes" name="form.submitted" class="inbutton" />
+                </form>
+                <div style="clear:right;">&nbsp;</div>
+            </div>
             
             <div id="key">
                 <div class="tooltip_right">
@@ -45,7 +77,7 @@
                         &nbsp;
                     </div>
                 </div>
-                <h2>Key</h2>
+                
                 <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
                     <table border="0" cellspacing="0" cellpadding="5">
                         <div tal:repeat="(s, the_source) sources.items()">
@@ -69,35 +101,7 @@
                     <input type="submit" value="Save new key" name="form.submitted" class="inbutton" /><br />
                     <a href="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" class="inbutton red_button" tal:condition="data.get('key', None) != None">Delete key</a>
                 </form>
-            </div>
-            
-            <div id="columns">
-                <div class="tooltip_right">
-                    <div id="columns_tooltip">
-                        &nbsp;
-                    </div>
-                </div>
-                <h2>Columns</h2>
-                <form action="${request.route_url('concision.query.edit_columns', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) sources.items()">
-                            <div tal:condition="s in data['sources']">
-                                
-                            <tr>
-                                <td colspan="2" style="text-align:center;">
-                                    <strong>${the_source.label}</strong>
-                                </td>
-                            </tr>
-                            <tr tal:repeat="c the_source.columns">
-                                <td><label for="${s}.${c}_col">${the_source.column_labels[c]}</label></td>
-                                <td><input type="checkbox" name="${s}.${c}" id="${s}.${c}_col" value="true" tal:attributes="checked '%s.%s' % (s, c) in data.get('columns', [])"/></td>
-                            </tr>
-                            </div>
-                        </div>
-                    </table>
-                    
-                    <input type="submit" value="Save column changes" name="form.submitted" class="inbutton" />
-                </form>
+                <div style="clear:right;">&nbsp;</div>
             </div>
             
             <div id="filters">
@@ -135,7 +139,6 @@
                             </td>
                         </form>
                     </tr>
-                    <!-- document.getElementById("frm1").submit(); -->
                     <tr tal:condition="len(data.get('filters', [])) > 0">
                         <td colspan="5"><hr /></td>
                     </tr>
@@ -147,14 +150,7 @@
                                 ${structure:html_f.option_box("column", columns, custom_id="")}
                             </td>
                             <td>
-                                <select name="operator">
-                                    <option value="=">equal to</option>,
-                                    <option value="!=">not equal to</option>,
-                                    <option value="&gt;">greater than</option>,
-                                    <option value="&gt;=">greater than or equal to</option>,
-                                    <option value="&lt;">less than</option>,
-                                    <option value="&lt;=">less than or equal to</option>
-                                </select>
+                                ${structure:html_f.option_box("operator", consts.operators, custom_id="")}
                             </td>
                             <td style="padding:3px;">
                                 <input type="text" name="value" value="" style="display:inline" size="15"/>
@@ -168,10 +164,50 @@
                         </form>
                     </tr>
                 </table>
+                <div style="clear:right;">&nbsp;</div>
+            </div>
+            
+            <div id="groupby">
+                <div class="error">This is not a complete feature. Please be aware it is liable to not work as expected. You can leave it blank if you want.</div>
+                
+                <div class="tooltip_right">
+                    <div id="groupby_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                    <table border="0" cellspacing="0" cellpadding="5">
+                        <div tal:repeat="(s, the_source) sources.items()">
+                            <div tal:condition="s in data['sources']">
+                            
+                            <tr>
+                                <td colspan="2" style="text-align:center;">
+                                    <strong>${the_source.label}</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="group_by">Group by</label></td>
+                                <td>${structure:html_f.option_box("group_by", columns, custom_id="", selected=data.get('groupby'))}</td>
+                            </tr>
+                            
+                            <tr tal:repeat="c selected_columns[s]">
+                                <td><label for="${s}.${c}_col">${the_source.column_labels[c]}</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("func", consts.group_funcs, custom_id="")}
+                                </td>
+                            </tr>
+                            
+                            </div>
+                        </div>
+                    </table>
+                </form>
+                <div style="clear:right;">&nbsp;</div>
             </div>
             
             <div id="other">
                 <a href="${request.route_url('concision.query.delete', query_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
+                <div style="clear:right;">&nbsp;</div>
             </div>
         </div>
     </div>

@@ -17,3 +17,11 @@ operator_lookup = {
     "=":  "__eq__",
     "!=": "__ne__",
 }
+
+group_funcs = {
+    "Total": "SUM",
+    "Average": "AVG",
+    "Maximum": "MAX",
+    "Minimum": "MIN",
+    "Count": "COUNT",
+}

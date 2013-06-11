@@ -2,6 +2,7 @@
 # import datetime
 import io
 import csv
+from collections import defaultdict
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
@@ -157,6 +158,12 @@ def edit_query(request):
         the_source = config['sources'][s]
         columns.extend([("%s.%s" % (s, c),the_source.column_labels.get(c, c)) for c in the_source.columns])
     
+    # Group by
+    selected_columns = defaultdict(list)
+    for s in data['sources']:
+        the_source = config['sources'][s]
+        selected_columns[s] = filter((lambda c: '%s.%s' % (s, c) in data.get('columns', [])), the_source.columns)
+    
     return dict(
         title     = "Concision query",
         layout    = layout,
@@ -165,6 +172,7 @@ def edit_query(request):
         data      = data,
         columns = columns,
         sources   = config['sources'],
+        selected_columns = selected_columns,
         
         html_f = html_f,
         consts = consts,
