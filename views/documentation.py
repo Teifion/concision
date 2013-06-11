@@ -41,8 +41,14 @@ def tooltip(request):
     page   = request.matchdict['page']
     request.do_not_log = True
     
-    return render_to_response("../templates/documentation/tooltips/{}.pt".format(page),
-        dict(
-        ),
-        request = request,
-    )
+    try:
+        return render_to_response("../templates/documentation/tooltips/{}.pt".format(page),
+            {},
+            request = request,
+        )
+    except ValueError:
+        return render_to_response("../templates/documentation/tooltips/tooltip_404.pt",
+            {},
+            request = request,
+        )
+    
