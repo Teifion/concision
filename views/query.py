@@ -246,7 +246,7 @@ def export_query(request):
     results, c_query = query_f.build(data)
     
     table_headers = []
-    for tc in [data['key']] + data['columns']:
+    for tc in filter(None, [data['key']] + data['columns']):
         t, c = tc.split(".")
         table_headers.append(config['sources'][t].column_labels.get(c, c))
     
