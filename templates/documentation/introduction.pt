@@ -7,21 +7,9 @@
         <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        
-        <h2>Alpha</h2>
-        <h4>12/6/2013</h4>
-        <ul>
-            <li>Added tooltips</li>
-            <li>Fixed bug when exporting with no key</li>
-            <li>Keys now have their own tab on the edit page</li>
-            <li>Added skeleton of some documentation</li>
-        </ul>
+        Intro to go here, sorry it's somewhat lacking right now though!
         <br /><br />
         
-        <h4>10/6/2013</h4>
-        <ul>
-            <li>Initial alpha release</li>
-        </ul>
-        
+        If you want you could always help by telling Teifion what you want to know more about so he can make sure it ends up here.
     </div>
 </div>

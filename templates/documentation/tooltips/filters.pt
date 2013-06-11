@@ -2,3 +2,6 @@ Filters allow you to restrict the data you wish to view. All filters listed will
 <br /><br />
 
 There is currently no way to combine filters in an or expression.
+<br /><br />
+
+<a href="${request.route_url('concision.doc.page', page='filters')}">Filters documentation</a>

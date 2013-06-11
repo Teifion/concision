@@ -3,15 +3,10 @@
         
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
-        <a class="inbutton" href="${request.route_url('concision.preferences')}">Preferences</a>
+        <a tal:condition="False" class="inbutton" href="${request.route_url('concision.preferences')}">Preferences</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        <script type="text/javascript" charset="utf-8">
-            $(function () {
-                $(".docbutton").button("option", {icons: {secondary: "ui-icon-document"}});
-            });
-        </script>
-        
         <div class="error">
             If you have not been briefed by Teifion, please view the <a href="${request.route_url('concision.doc.menu')}">documentation</a> for Concision before using it.
         </div>

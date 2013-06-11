@@ -1,28 +1,28 @@
 <div metal:use-macro="layout">
     <style type="text/css" media="screen" metal:fill-slot="css">
-        
+        .dblock
+        {
+            margin-left:20px;
+        }
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
-        <a class="inbutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
     </div>
     <div metal:fill-slot="content">
         <a href="${request.route_url('concision.doc.page', page='changelog')}" class="inbutton" style="float:right;">Change log</a>
+        <a href="${request.route_url('concision.doc.page', page='alpha')}" class="inbutton" style="float:right;">Notes from Teifion</a>
+        <a href="${request.route_url('concision.doc.page', page='todo')}" class="inbutton" style="float:right;">Request a feature!</a>
         
-        This software is currently under development and I'm expecting some parts to not work. It is designed to allow you to pull numerical information from the dashboard (e.g. the F&amp;T).
-        <br /><br />
+        <h2>Topics</h2>
+        <div class="dblock">
+            <h3><a href="${request.route_url('concision.doc.page', page='introduction')}">Introduction</a></h3>
+            <div class="dblock">
+                What is Concision?<br />
+                Item 2<br />
+                Item 3<br />
+            </div>
+        </div>
         
-        I do have a few requests of anybody using it to help me improve it:
-        <br /><br />
-        
-        <ol>
-            <li><strong>Try to break things:</strong> It's the most complicated piece of software I've written and I'll never come up with all the different ways to use it you will. All errors are automatically logged by the system and the sooner they're found the sooner I can improve the relevant section.<br /><br /></li>
-            
-            <li><strong>Make a wishlist:</strong> I've got a host of ideas on what I want to be able to do with it but I'm not the one this is designed for. You are. I want you to let me know of the features you want (big and little), don't worry about if it's possible, just tell me anyway. I ask only two things for wishes; firstly I want you to send me an email so I can store it (rather than forget it) and secondly if you can, draw pictures of how you visualise the idea looking (that's not a joke).<br /><br /></li>
-            
-            <li><strong>Updates:</strong> If you want to be kept in the loop with updates then tell me and I'll let you know anytime there are new features added.<br /><br /></li>
-            
-            <li><strong>Time:</strong> Please be aware I'm writing this in my free time so progress is dependant on several things (the amount of time spent wooing ladies, dancing, eating, sleeping, eating etc).<br /><br /></li>
-        </ol>
         
     </div>
 </div>

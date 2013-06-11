@@ -1,0 +1,27 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        Stuff about filters will go here. Sorry it's a bit empty right now.
+        <br /><br />
+        
+        If you want you could always help by telling Teifion what you want to know more about so he can make sure it ends up here.
+        <br /><br />
+        
+        <h2>What is a filter?</h2>
+        <br /><br />
+        
+        <h2>Operators</h2>
+        <br /><br />
+        
+        <h2>Dates</h2>
+        Dates are accepted in the format of DD/MM/YYYY though you can also use dashes "-" or spaces " " as separators if you want.
+        <br /><br />
+        
+    </div>
+</div>

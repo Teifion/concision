@@ -1,15 +1,13 @@
 # I'm not sure how to separate this from the rest of my project
 from ..models import Base as DeclarativeBase
+
+
 from sqlalchemy import (
     Column,
     Integer,
     Text,
     String,
-    Float,
-    Date,
     Boolean,
-    Interval,
-    Numeric,
     
     ForeignKey,
 )

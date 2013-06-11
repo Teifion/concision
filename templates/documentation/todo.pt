@@ -1,0 +1,23 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        To request a feature please follow the steps below:
+        <ol style="margin-left:30px;">
+            <li>Decide what feature you want while drinking some tea</li>
+            <li>Email Teifion explaining the idea you've had</li>
+            <li>Eat some cake because cake is delicious</li>
+            <li>Wait until Teifion implements the feature</li>
+            <li>Enjoy the new feature and send Teifion some sweets</li>
+            <li style="font-size:9px;">Seriously, sweets are delicious</li>
+        </ol>
+        <br /><br />
+        
+        As people suggest ideas I'll add them below so you can see what's already been requested (the more people that request an idea the higher up the list it goes). You can see which ideas have been implemented when by viewing the <a href="${request.route_url('concision.doc.page', page='changelog')}">Change log</a>.
+    </div>
+</div>
