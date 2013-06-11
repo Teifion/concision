@@ -12,13 +12,6 @@ from ...core.models import (
 
 from . import exporter
 
-# def new_series(name, data):
-#     return {
-#         "name": name,
-#         "pointInterval": int(datetime.timedelta(days=1).total_seconds() * 1000),
-#         "data": list(data),
-#     }
-
 def convert(results, c_query, table_headers):
     series = []
     

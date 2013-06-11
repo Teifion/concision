@@ -154,7 +154,7 @@ def build(data):
         # config['sources'][table]
         # if column in table_source.aliases:
         
-        value = converters.convert(f['value'], source_table.column_converters.get(c))
+        value = converters.convert(f['value'], source_table.column_converters.get(c, []))
         # value = convert_value(f['value'], [])
         
         value = typecast(q.get(f['column'], use_alias=False), value)

@@ -24,7 +24,7 @@ def new_query(request):
         the_query = StoredQuery()
         the_query.name = request.params['name'].strip()
         the_query.creator = the_user.id
-        the_query.data = query_f.check_query_data({})
+        the_query.data = json.dumps(query_f.check_query_data({}))
         
         config['DBSession'].add(the_query)
         
