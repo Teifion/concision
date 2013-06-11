@@ -117,4 +117,4 @@ def edit_key(request):
     the_query.compress_data()
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#columns" % request.route_url("concision.query.edit", query_id=query_id))
+    return HTTPFound(location="%s#key" % request.route_url("concision.query.edit", query_id=query_id))
