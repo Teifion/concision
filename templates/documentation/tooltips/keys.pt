@@ -1,1 +1,1 @@
-Tooltip for keys will go here
+Keys are the axis used to sort your data by default. Graph views will use the key for their X axis, without a key you cannot view the results in graph form.

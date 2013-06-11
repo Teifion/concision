@@ -1,1 +1,4 @@
-Tooltip for filters will go here
+Filters allow you to restrict the data you wish to view. All filters listed will be combined so if you say the date must be greater than 01/01/2013 and less than 01/02/2013 then you will not get any results outside of January 2013.
+<br /><br />
+
+There is currently no way to combine filters in an or expression.
