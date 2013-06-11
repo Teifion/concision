@@ -51,10 +51,12 @@ class ConcisionSource(object):
         if "columns" in kwargs:
             self.columns = kwargs['columns']
         elif "columns_from_labels" in kwargs and len(self.column_labels) > 0:
-            self.columns = tuple(self.column_labels.keys())
+            self.columns = list(self.column_labels.keys())
+            self.columns.sort()
         else:
             ignored_columns = kwargs.get('ignored_columns', [])
             self.columns = [c.name for c in db_class.__table__.columns if c not in ignored_columns]
+            self.columns.sort()
 
 class StoredQuery(DeclarativeBase):
     """Used to store a query in the database, it is then converted into
