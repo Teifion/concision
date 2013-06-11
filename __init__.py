@@ -29,17 +29,8 @@ def example_config_constructor(config):
     concision.config['get_userid']    = lambda r: r.user.id
     concision.config['get_user_func'] = lambda r: r.user
     
-    from .concision2 import dash_models
-    concision.add_source(dash_models.ob_qfup_stats_mtd)
-    concision.add_source(dash_models.ob_qfup_stats_eom)
-    concision.add_source(dash_models.ob_ancils_stats_mtd)
-    concision.add_source(dash_models.ob_ancils_stats_eom)
-
-# def table_label(table_name):
-#     if table_name in config['tables']:
-#         return config['tables'][table_name]._concision_table_label
-    
-#     return table_name
+    from .concision import example_sources
+    concision.add_source(example_sources.stat_table)
 
 from . import views
 def includeme(config):
@@ -114,6 +105,6 @@ def includeme(config):
     config.add_view(views.doc_menu, route_name='concision.doc.menu',
         renderer='templates/documentation/menu.pt', permission='concision')
     config.add_view(views.doc_page, route_name='concision.doc.page', permission='concision')
-    config.add_view(views.tooltip, route_name='concision.tooltip', renderer='string')
+    config.add_view(views.tooltip, route_name='concision.tooltip', renderer='string', http_cache=3600)
     
     return config
