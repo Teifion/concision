@@ -1,10 +1,13 @@
-from ..models import ConcisionSource
+from .models import ConcisionSource
 
 """These exist only so we don't get a compile error of any kind
 ideally you would import the actual SQLAlchemy classes.
 """
-class UserClass(object): pass
-class StatTableClass(object): pass
+class UserClass(object):
+    __tablename__ = "users"
+
+class StatTableClass(object):
+    __tablename__ = "stats"
 
 stat_table = ConcisionSource(
     db_class = StatTableClass,
@@ -27,7 +30,7 @@ stat_table = ConcisionSource(
     # Table joins
     aliases = {
         "agent": {
-            "db_class": User,
+            "db_class": UserClass,
             "name": "agent_table",
             "table": "users",
             "column": "name",
@@ -36,7 +39,7 @@ stat_table = ConcisionSource(
         },
         
         "manager": {
-            "db_class": User,
+            "db_class": UserClass,
             "name": "manager_table",
             "table": "users",
             "column": "name",
