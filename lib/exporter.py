@@ -3,6 +3,8 @@ import decimal
 import json
 
 def convert_value(v):
+    if v is None: return None
+    
     if type(v) == datetime.datetime:
         return v.strftime("%H:%M:%S %d/%m/%Y")
     
