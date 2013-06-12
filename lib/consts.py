@@ -19,9 +19,10 @@ operator_lookup = {
 }
 
 group_funcs = {
-    "Total": "SUM",
-    "Average": "AVG",
-    "Maximum": "MAX",
-    "Minimum": "MIN",
-    "Count": "COUNT",
+    "-": " Group by",
+    "SUM": "Total",
+    "AVG": "Average",
+    "MAX": "Maximum",
+    "MIN": "Minimum",
+    "COUNT": "Count",
 }

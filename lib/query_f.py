@@ -13,7 +13,7 @@ class CQuery(object):
         self.filters   = []
         self.order_bys = []
         self.group_bys = []
-            
+    
     def check_for_aliases(self, data):
         """
         Goes through all referenced fields and checks to see if they
@@ -113,4 +113,5 @@ def check_query_data(data):
     data['key'] = data.get('key', None)
     data['columns'] = data.get('columns', [])
     data['filters'] = data.get('filters', [])
+    data['group_by_funcs'] = data.get('group_by_funcs', {})
     return data

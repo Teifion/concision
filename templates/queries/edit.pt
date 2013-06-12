@@ -50,9 +50,7 @@
                 
                 <form action="${request.route_url('concision.query.edit_columns', query_id=the_query.id)}" method="post" accept-charset="utf-8">
                     <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) sources.items()">
-                            <div tal:condition="s in data['sources']">
-                                
+                        <div tal:repeat="(s, the_source) relevant_sources">
                             <tr>
                                 <td colspan="2" style="text-align:center;">
                                     <strong>${the_source.label}</strong>
@@ -62,7 +60,6 @@
                                 <td><label for="${s}.${c}_col">${the_source.column_labels[c]}</label></td>
                                 <td><input type="checkbox" name="${s}.${c}" id="${s}.${c}_col" value="true" tal:attributes="checked '%s.%s' % (s, c) in data.get('columns', [])"/></td>
                             </tr>
-                            </div>
                         </div>
                     </table>
                     
@@ -80,9 +77,7 @@
                 
                 <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
                     <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) sources.items()">
-                            <div tal:condition="s in data['sources']">
-                            
+                        <div tal:repeat="(s, the_source) relevant_sources">
                             <tr>
                                 <td colspan="2" style="text-align:center;">
                                     <strong>${the_source.label}</strong>
@@ -93,8 +88,6 @@
                                 <td><label for="${s}.${c}_key">${the_source.column_labels[c]}</label></td>
                                 <td><input type="radio" name="query_key" id="${s}.${c}_key" value="${s}.${c}" tal:attributes="checked '%s.%s' % (s, c) == data.get('key', '')"/></td>
                             </tr>
-                            
-                            </div>
                         </div>
                     </table>
                     
@@ -176,31 +169,47 @@
                     </div>
                 </div>
                 
-                <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) sources.items()">
-                            <div tal:condition="s in data['sources']">
+                <form action="${request.route_url('concision.query.edit_groupby', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                    <script type="text/javascript" charset="utf-8">
+                        function group_by_toggle_func ()
+                        {
+                            var checked = $('#group_by_toggle').is(':checked');
+                            var divs = '${', '.join(['#%s select' % s for s,ss in relevant_sources])}';
                             
+                            if (checked)
+                            {
+                                $('#group_by_div_${s} select').attr('disabled', false);
+                            }
+                            else
+                            {
+                                $('#group_by_div_${s} select').attr('disabled', true);
+                            }
+                        }
+                        
+                        $(document).ready(function() {
+                            group_by_toggle_func();
+                        });
+                    </script>
+                    <label for="group_by_toggle">Enable grouping:</label>&nbsp;
+                    <input type="checkbox" name="group_by" id="group_by_toggle" value="true" tal:attributes="checked data.get('group_by')" onchange="group_by_toggle_func();"/>
+                    <br /><br />
+                    
+                    <div tal:repeat="(s, the_source) relevant_sources" id="group_by_div_${s}">
+                        <table border="0" cellspacing="0" cellpadding="5">
                             <tr>
                                 <td colspan="2" style="text-align:center;">
                                     <strong>${the_source.label}</strong>
                                 </td>
                             </tr>
-                            <tr>
-                                <td><label for="group_by">Group by</label></td>
-                                <td>${structure:html_f.option_box("group_by", columns, custom_id="", selected=data.get('groupby'))}</td>
-                            </tr>
-                            
                             <tr tal:repeat="c selected_columns[s]">
-                                <td><label for="${s}.${c}_col">${the_source.column_labels[c]}</label></td>
+                                <td><label for="${s}.${c}_group_col">${the_source.column_labels[c]}</label></td>
                                 <td>
-                                    ${structure:html_f.option_box("func", consts.group_funcs, custom_id="")}
+                                    ${structure:html_f.option_box("%s.%s" % (s, c), consts.group_funcs, custom_id="%s.%s_group_col" % (s, c), selected=data['group_by_funcs'].get("%s.%s" % (s, c)))}
                                 </td>
                             </tr>
-                            
-                            </div>
-                        </div>
-                    </table>
+                        </table>
+                    </div>
+                    <input type="submit" value="Save grouping" name="form.submitted" class="inbutton" />
                 </form>
                 <div style="clear:right;">&nbsp;</div>
             </div>

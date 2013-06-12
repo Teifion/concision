@@ -148,8 +148,10 @@ def edit_query(request):
     query_id = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
     data = the_query.extract_data()
+    query_f.check_query_data(data)
     
     # Columns
+    relevant_sources = [s for s in config['sources'].items() if s[0] in data['sources']]
     existing_columns = data.get('columns', [])
     
     # Filters
@@ -162,7 +164,10 @@ def edit_query(request):
     selected_columns = defaultdict(list)
     for s in data['sources']:
         the_source = config['sources'][s]
-        selected_columns[s] = filter((lambda c: '%s.%s' % (s, c) in data.get('columns', [])), the_source.columns)
+        prelude = lambda c: '%s.%s' % (s, c) in data.get('columns', []) or '%s.%s' % (s, c) == data.get('key', "")
+        
+        selected_columns[s] = filter(prelude, the_source.columns)
+    
     
     return dict(
         title     = "Concision query",
@@ -173,6 +178,7 @@ def edit_query(request):
         columns = columns,
         sources   = config['sources'],
         selected_columns = selected_columns,
+        relevant_sources = relevant_sources,
         
         html_f = html_f,
         consts = consts,

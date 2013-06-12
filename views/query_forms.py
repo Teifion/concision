@@ -118,3 +118,26 @@ def edit_key(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#key" % request.route_url("concision.query.edit", query_id=query_id))
+
+def edit_groupby(request):
+    request.do_not_log = True
+    the_user  = config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    the_query.jdata['group_by'] = "group_by" in request.params
+    
+    groupings = {}
+    for s, the_source in config['sources'].items():
+        for c in the_source.columns:
+            key = "{}.{}".format(s, c)
+            if key in request.params:
+                groupings[key] = request.params[key]
+    
+    the_query.jdata['group_by_funcs'] = groupings
+    the_query.compress_data()
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#groupby" % request.route_url("concision.query.edit", query_id=query_id))

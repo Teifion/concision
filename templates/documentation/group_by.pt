@@ -1,0 +1,14 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        Stuff about grouping will go here. Sorry it's a bit empty right now.
+        <br /><br />
+        
+    </div>
+</div>

@@ -41,16 +41,13 @@ def includeme(config):
     
     # Querie edit/viewing
     config.add_route('concision.query.source', '/concision/query/source/{query_id}')
-    
-    config.add_route('concision.query.columns', '/concision/query/columns/{query_id}')
     config.add_route('concision.query.edit_columns', '/concision/query/edit_columns/{query_id}')
+    config.add_route('concision.query.edit_groupby', '/concision/query/edit_groupby/{query_id}')
     
-    config.add_route('concision.query.filters', '/concision/query/filters/{query_id}')
     config.add_route('concision.query.add_filter', '/concision/query/add_filter/{query_id}')
     config.add_route('concision.query.edit_filter', '/concision/query/edit_filter/{query_id}')
     config.add_route('concision.query.delete_filter', '/concision/query/delete_filter/{query_id}')
     
-    config.add_route('concision.query.key', '/concision/query/key/{query_id}')
     config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
     
     config.add_route('concision.query.new', '/concision/query/new')
@@ -71,16 +68,11 @@ def includeme(config):
     config.add_view(views.source, route_name='concision.query.source',
         renderer='templates/queries/source.pt', permission='concision_edit')
     
-    config.add_view(views.columns, route_name='concision.query.columns',
-        renderer='templates/queries/columns.pt', permission='concision_edit')
     config.add_view(views.edit_columns, route_name='concision.query.edit_columns', permission='concision_edit')
+    config.add_view(views.edit_groupby, route_name='concision.query.edit_groupby', permission='concision_edit')
     
-    config.add_view(views.key, route_name='concision.query.key',
-        renderer='templates/queries/key.pt', permission='concision_edit')
     config.add_view(views.edit_key, route_name='concision.query.edit_key', permission='concision_edit')
     
-    config.add_view(views.filters, route_name='concision.query.filters',
-        renderer='templates/queries/filters.pt', permission='concision_edit')
     config.add_view(views.add_filter, route_name='concision.query.add_filter', permission='concision_edit')
     config.add_view(views.edit_filter, route_name='concision.query.edit_filter', permission='concision_edit')
     config.add_view(views.delete_filter, route_name='concision.query.delete_filter', permission='concision_edit')
