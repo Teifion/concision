@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 operators = {
     "=": "equal to",
     "!=": "not equal to",
@@ -25,4 +27,12 @@ group_funcs = {
     "MAX": "Maximum",
     "MIN": "Minimum",
     "COUNT": "Count",
+}
+
+group_lookup = {
+    "SUM": func.sum,
+    "AVG": func.avg,
+    "MAX": func.max,
+    "MIN": func.min,
+    "COUNT": func.count,
 }

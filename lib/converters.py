@@ -48,6 +48,8 @@ def typecast(filter_col, value):
         temp_value = value.replace(" ", "/").replace("-", "/")
         d, m, y = temp_value.split("/")
         
+        if int(y) < 1000: y = 2000 + int(y)
+        
         return datetime.date(year=int(y), month=int(m), day=int(d))
         
     elif ptype == sql_datetime:
