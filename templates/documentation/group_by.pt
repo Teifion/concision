@@ -7,8 +7,61 @@
         <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        Stuff about grouping will go here. Sorry it's a bit empty right now.
+        <h2 id="intro">Introduction to Grouping</h2>
+        Grouping allows you to combine several results into an aggregate function and group them based on other fields. You can group by as many fields as you like and apply functions to as many fields as you like (though must group by at least one field).
         <br /><br />
         
+        <strong>Example data</strong><br />
+        <table border="0" cellspacing="0" cellpadding="5">
+            <tr>
+                <th>Agent</th>
+                <th>Manager</th>
+                <th>Sales</th>
+            </tr>
+            <tr>
+                <td>Alice</td>
+                <td>Martin</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>Bob</td>
+                <td>Martin</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>Charlie</td>
+                <td>Neil</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>Daphne</td>
+                <td>Neil</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>Erik</td>
+                <td>Neil</td>
+                <td>2</td>
+            </tr>
+        </table>
+        <br /><br />
+        
+        If we build a query and select "Manager" and "Sales" for our columns we can then enable grouping under the grouping tab. We can set the "Manager" column to be "Group by" and the "Sales" column to be "Average". This will then give us the average number of sales per manager, like so.
+        <br /><br />
+        
+        <table border="0" cellspacing="0" cellpadding="5">
+            <tr>
+                <th>Manager</th>
+                <th>Sales (Average)</th>
+            </tr>
+            <tr>
+                <td>Martin</td>
+                <td>8</td>
+            </tr>
+            <tr>
+                <td>Neil</td>
+                <td>5</td>
+            </tr>
+        </table>
     </div>
 </div>

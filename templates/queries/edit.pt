@@ -161,8 +161,6 @@
             </div>
             
             <div id="groupby">
-                <div class="error">This is not a complete feature. Please be aware it is liable to not work as expected. You can leave it blank if you want.</div>
-                
                 <div class="tooltip_right">
                     <div id="groupby_tooltip">
                         &nbsp;

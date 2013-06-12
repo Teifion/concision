@@ -9,6 +9,14 @@
     <div metal:fill-slot="content">
         
         <h2>Alpha</h2>
+        <h4>13/6/2013</h4>
+        <ul>
+            <li>Added grouping</li>
+            <li>Added some documentation on grouping</li>
+            <li>Todo list now has some intial ideas in it</li>
+        </ul>
+        <br /><br />
+        
         <h4>12/6/2013</h4>
         <ul>
             <li>Added tooltips</li>
