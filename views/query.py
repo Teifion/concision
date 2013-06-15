@@ -14,7 +14,7 @@ from ..models import (
 )
 
 import json
-from ..lib import html_f, consts, query_f, exporter, graphing
+from ..lib import html_f, consts, query_f, exporter, graphing, pretty_sql
 from .. import config
 
 def new_query(request):
@@ -275,6 +275,24 @@ def export_query(request):
     return Response(body=f.read(), content_type='text/plain', content_disposition='attachment; filename="concision_export.csv"')
     
     return f.read()
+
+def raw_query(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    query_id = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    data = the_query.extract_data()
+    
+    results, c_query = query_f.build(data)
+    
+    return dict(
+        title     = "Raw query",
+        layout    = layout,
+        the_user  = the_user,
+        the_query = pretty_sql.prettify(results),
+        html_f = html_f,
+    )
 
 def delete_query(request):
     the_user = config['get_user_func'](request)

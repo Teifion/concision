@@ -54,4 +54,8 @@ stat_table = ConcisionSource(
         "agent": ["upper", "strip"],
         "manager": ["upper", "strip"],
     },
+    
+    # In this instances we don't want to ever show cancelled sales
+    # this filter is hidden from the end user
+    mandatory_filters = lambda: [StatTableClass.cancelled != None],
 )

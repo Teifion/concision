@@ -37,6 +37,14 @@
                 Item 2<br />
                 Item 3<br />
             </div>
+            <br />
+            
+            <h3><a href="${request.route_url('concision.doc.page', page='developer')}">Developer</a></h3>
+            <div class="dblock">
+                <a href="${request.route_url('concision.doc.page', page='developer')}#intro">Introduction</a><br />
+                Item 2<br />
+                Item 3<br />
+            </div>
         </div>
         
         

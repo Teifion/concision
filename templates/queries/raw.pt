@@ -1,0 +1,9 @@
+<div metal:use-macro="layout">
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        ${structure:the_query}
+    </div>
+</div>
