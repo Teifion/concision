@@ -37,6 +37,8 @@ class ConcisionSource(object):
         self.column_labels = kwargs.get('column_labels', {})
         self.column_converters = kwargs.get('column_converters', {})
         
+        self.mandatory_filters = kwargs.get('mandatory_filters', (lambda:()))
+        
         self.aliases = kwargs.get('aliases', {})
         
         if "keys" in kwargs:

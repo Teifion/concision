@@ -118,6 +118,12 @@ def build(data):
         
         q.filters.append(op_func(value))
     
+    # Mandatory filters
+    columns = []
+    for s in data['sources']:
+        the_source = config['sources'][s]
+        q.filters.extend(the_source.mandatory_filters())
+    
     # TODO desc/asc
     if data['key'] != None:
         q.order_bys.append(q.get(data['key']))
