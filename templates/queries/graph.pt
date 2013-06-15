@@ -54,7 +54,7 @@
                         min: 0,
                         //max: 11,
                         startOnTick: false,
-                        showFirstLabel: false
+                        showFirstLabel: true
                     },
                     tooltip: {
                         shared: true
@@ -63,26 +63,8 @@
                         enabled: true
                     },
                     plotOptions: {
-                        series: {pointStart: ${graph_data['start_date']}},
-                        area: {
-                            pointStart: ${graph_data['start_date']},
-                            
-                            lineWidth: 1,
-                            marker: {
-                                enabled: false,
-                                states: {
-                                    hover: {
-                                        enabled: true,
-                                        radius: 5
-                                    }
-                                }
-                            },
-                            shadow: false,
-                            states: {
-                                hover: {
-                                    lineWidth: 1
-                                }
-                            }
+                        series: {
+                            pointStart: ${graph_data['start_date']}
                         }
                     },
                     series: ${graph_data['series']}
