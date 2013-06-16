@@ -9,6 +9,13 @@
     <div metal:fill-slot="content">
         
         <h2>Alpha</h2>
+        <h4>16/6/2013</h4>
+        <ul>
+            <li>Graphs now put points in their correct dates</li>
+            <li>Added ability to view raw query</li>
+        </ul>
+        <br /><br />
+        
         <h4>13/6/2013</h4>
         <ul>
             <li>Added grouping</li>

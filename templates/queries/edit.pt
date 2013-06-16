@@ -23,6 +23,8 @@
                 $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
                 $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
                 $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
+                $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
+                
             });
         </script>
         
@@ -35,9 +37,13 @@
         <div id="tab_container">
             <ul>
                 <li><a href="#columns">Columns</a></li>
-                <li><a href="#key">Key</a></li>
+                
                 <li><a href="#filters">Filters</a></li>
+                <li><a href="#orderby">Ordering</a></li>
                 <li><a href="#groupby">Grouping</a></li>
+                
+                <li><a href="#graphing">Graphing</a></li>
+                
                 <li><a href="#other">Other</a></li>
             </ul>
             
@@ -64,35 +70,6 @@
                     </table>
                     
                     <input type="submit" value="Save column changes" name="form.submitted" class="inbutton" />
-                </form>
-                <div style="clear:right;">&nbsp;</div>
-            </div>
-            
-            <div id="key">
-                <div class="tooltip_right">
-                    <div id="keys_tooltip">
-                        &nbsp;
-                    </div>
-                </div>
-                
-                <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) relevant_sources">
-                            <tr>
-                                <td colspan="2" style="text-align:center;">
-                                    <strong>${the_source.label}</strong>
-                                </td>
-                            </tr>
-                            
-                            <tr tal:repeat="c the_source.keys">
-                                <td><label for="${s}.${c}_key">${the_source.column_labels[c]}</label></td>
-                                <td><input type="radio" name="query_key" id="${s}.${c}_key" value="${s}.${c}" tal:attributes="checked '%s.%s' % (s, c) == data.get('key', '')"/></td>
-                            </tr>
-                        </div>
-                    </table>
-                    
-                    <input type="submit" value="Save new key" name="form.submitted" class="inbutton" /><br />
-                    <a href="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" class="inbutton red_button" tal:condition="data.get('key', None) != None">Delete key</a>
                 </form>
                 <div style="clear:right;">&nbsp;</div>
             </div>
@@ -160,6 +137,65 @@
                 <div style="clear:right;">&nbsp;</div>
             </div>
             
+            <div id="orderby">
+                <div class="tooltip_right" style="width: 360px;">
+                    <div id="orderby_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="error">This section is still a work in progress and doesn't affect the query yet</div>
+                
+                <table border="0" cellspacing="5" cellpadding="5">
+                    <tr>
+                        <th>Field</th>
+                        <th>Order</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    <tr tal:repeat="o data.get('orderby', [])">
+                        <form action="${request.route_url('concision.query.edit_orderby', query_id=the_query.id)}" method="post" accept-charset="utf-8" id="order_${repeat.o.index}">
+                            <input type="hidden" name="orderby_id" value="${repeat.o.index}" />
+                            <input type="hidden" name="form.submitted" value="form.submitted" />
+                            
+                            <td>
+                                ${structure:html_f.option_box("column", columns, custom_id="", selected=o['column'])}
+                            </td>
+                            <td>
+                                ${structure:html_f.option_box("order", consts.orderby, custom_id="", selected=o['order'])}
+                            </td>
+                            <td class="button_cell" width="100" style="padding-right:0">
+                                <div onclick="$('#order_${repeat.o.index}').submit();" class="button">Save</div>
+                            </td>
+                            <td class="button_cell" width="100" style="padding-left:0">
+                                <a href="${request.route_url('concision.query.delete_orderby', query_id=the_query.id)}?o=${repeat.o.index}" class="button red_button">Delete</a>
+                            </td>
+                        </form>
+                    </tr>
+                    <tr tal:condition="len(data.get('orders', [])) > 0">
+                        <td colspan="5"><hr /></td>
+                    </tr>
+                    <tr>
+                        <form action="${request.route_url('concision.query.add_orderby', query_id=the_query.id)}" method="post" accept-charset="utf-8" id="new_order_form">
+                            <input type="hidden" name="form.submitted" value="form.submitted" />
+                            
+                            <td>
+                                ${structure:html_f.option_box("column", columns, custom_id="")}
+                            </td>
+                            <td>
+                                ${structure:html_f.option_box("order", consts.orderby, custom_id="")}
+                            </td>
+                            <td class="button_cell" width="100">
+                                <div onclick="$('#new_order_form').submit();" class="button">Add</div>
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </form>
+                    </tr>
+                </table>
+                <div style="clear:right;">&nbsp;</div>
+            </div>
+            
             <div id="groupby">
                 <div class="tooltip_right">
                     <div id="groupby_tooltip">
@@ -208,6 +244,35 @@
                         </table>
                     </div>
                     <input type="submit" value="Save grouping" name="form.submitted" class="inbutton" />
+                </form>
+                <div style="clear:right;">&nbsp;</div>
+            </div>
+            
+            <div id="graphing">
+                <div class="tooltip_right">
+                    <div id="keys_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                    <table border="0" cellspacing="0" cellpadding="5">
+                        <div tal:repeat="(s, the_source) relevant_sources">
+                            <tr>
+                                <td colspan="2" style="text-align:center;">
+                                    <strong>${the_source.label}</strong>
+                                </td>
+                            </tr>
+                            
+                            <tr tal:repeat="c the_source.keys">
+                                <td><label for="${s}.${c}_key">${the_source.column_labels[c]}</label></td>
+                                <td><input type="radio" name="query_key" id="${s}.${c}_key" value="${s}.${c}" tal:attributes="checked '%s.%s' % (s, c) == data.get('key', '')"/></td>
+                            </tr>
+                        </div>
+                    </table>
+                    
+                    <input type="submit" value="Save new key" name="form.submitted" class="inbutton" /><br />
+                    <a href="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" class="inbutton red_button" tal:condition="data.get('key', None) != None">Delete key</a>
                 </form>
                 <div style="clear:right;">&nbsp;</div>
             </div>

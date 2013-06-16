@@ -48,6 +48,10 @@ def includeme(config):
     config.add_route('concision.query.edit_filter', '/concision/query/edit_filter/{query_id}')
     config.add_route('concision.query.delete_filter', '/concision/query/delete_filter/{query_id}')
     
+    config.add_route('concision.query.add_orderby', '/concision/query/add_orderby/{query_id}')
+    config.add_route('concision.query.edit_orderby', '/concision/query/edit_orderby/{query_id}')
+    config.add_route('concision.query.delete_orderby', '/concision/query/delete_orderby/{query_id}')
+    
     config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
     
     config.add_route('concision.query.new', '/concision/query/new')
@@ -77,6 +81,10 @@ def includeme(config):
     config.add_view(views.add_filter, route_name='concision.query.add_filter', permission='concision_edit')
     config.add_view(views.edit_filter, route_name='concision.query.edit_filter', permission='concision_edit')
     config.add_view(views.delete_filter, route_name='concision.query.delete_filter', permission='concision_edit')
+    
+    config.add_view(views.add_orderby, route_name='concision.query.add_orderby', permission='concision_edit')
+    config.add_view(views.edit_orderby, route_name='concision.query.edit_orderby', permission='concision_edit')
+    config.add_view(views.delete_orderby, route_name='concision.query.delete_orderby', permission='concision_edit')
     
     config.add_view(views.new_query, route_name='concision.query.new',
         renderer='templates/queries/new.pt', permission='concision_edit')

@@ -141,12 +141,12 @@ def build(data):
         return [], q
     
     # For debug
-    print("\n\n")
-    print(q.columns)
-    print(q.filters)
-    print(q.order_bys)
-    print(q.group_bys)
-    print("\n\n")
+    # print("\n\n")
+    # print(q.columns)
+    # print(q.filters)
+    # print(q.order_bys)
+    # print(q.group_bys)
+    # print("\n\n")
     
     return config['DBSession'].query(*q.columns).filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys).limit(400), q
 
@@ -156,4 +156,5 @@ def check_query_data(data):
     data['filters']        = data.get('filters', [])
     data['group_by']       = data.get('group_by', False)
     data['group_by_funcs'] = data.get('group_by_funcs', {})
+    data['orderby']        = data.get('orderby', [])
     return data

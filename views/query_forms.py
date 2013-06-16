@@ -3,23 +3,23 @@
 
 from pyramid.httpexceptions import HTTPFound
 
-from pyramid.renderers import get_renderer
+# from pyramid.renderers import get_renderer
 
 from ..models import (
     StoredQuery,
 )
 
-import json
-from ..lib import html_f, consts
+# import json
+# from ..lib import html_f, consts
 from .. import config
 
 def edit_columns(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-    data = the_query.extract_data()
+    the_query.extract_data()
     
     columns = []
     for s, the_source in config['sources'].items():
@@ -36,11 +36,11 @@ def edit_columns(request):
 
 def add_filter(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-    data = the_query.extract_data()
+    the_query.extract_data()
     
     new_filter = {
         "column": request.params['column'],
@@ -59,11 +59,11 @@ def add_filter(request):
 
 def edit_filter(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-    data = the_query.extract_data()
+    the_query.extract_data()
     
     new_filter = {
         "column": request.params['column'],
@@ -83,12 +83,11 @@ def edit_filter(request):
 
 def delete_filter(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-    data = the_query.extract_data()
-    
+    the_query.extract_data()
     
     filter_id = int(request.params['f'])
     existing_filters = the_query.jdata.get('filters', [])
@@ -107,21 +106,21 @@ def delete_filter(request):
 
 def edit_key(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-    data = the_query.extract_data()
+    the_query.extract_data()
     
     the_query.jdata['key'] = request.params.get('query_key', None)
     the_query.compress_data()
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#key" % request.route_url("concision.query.edit", query_id=query_id))
+    return HTTPFound(location="%s#graphing" % request.route_url("concision.query.edit", query_id=query_id))
 
 def edit_groupby(request):
     request.do_not_log = True
-    the_user  = config['get_user_func'](request)
+    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
@@ -141,3 +140,71 @@ def edit_groupby(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#groupby" % request.route_url("concision.query.edit", query_id=query_id))
+    
+def add_orderby(request):
+    request.do_not_log = True
+    # the_user  = config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    new_orderby = {
+        "column": request.params['column'],
+        "order": request.params['order'],
+    }
+    
+    existing_orderby = the_query.jdata.get('orderby', [])
+    existing_orderby.append(new_orderby)
+    the_query.jdata['orderby'] = existing_orderby
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#orderby" % request.route_url("concision.query.edit", query_id=query_id))
+
+def edit_orderby(request):
+    request.do_not_log = True
+    # the_user  = config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    new_orderby = {
+        "column": request.params['column'],
+        "order": request.params['order'],
+    }
+    orderby_id = int(request.params['orderby_id'])
+    
+    existing_orderby = the_query.jdata.get('orderby', [])
+    existing_orderby[orderby_id] = new_orderby
+    the_query.jdata['orderby'] = existing_orderby
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#orderby" % request.route_url("concision.query.edit", query_id=query_id))
+
+def delete_orderby(request):
+    request.do_not_log = True
+    config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    orderby_id = int(request.params['o'])
+    existing_orderby = the_query.jdata.get('orderby', [])
+    
+    try:
+        existing_orderby = existing_orderby[:orderby_id] + existing_orderby[orderby_id+1:]
+    except Exception:
+        raise
+    
+    the_query.jdata['orderby'] = existing_orderby
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#orderby" % request.route_url("concision.query.edit", query_id=query_id))
