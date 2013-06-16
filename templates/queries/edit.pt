@@ -24,7 +24,6 @@
                 $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
                 $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
                 $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
-                
             });
         </script>
         

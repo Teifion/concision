@@ -124,18 +124,31 @@ def build(data):
         the_source = config['sources'][s]
         q.filters.extend(the_source.mandatory_filters())
     
-    # TODO desc/asc
+    # Order bys
     if data['key'] != None:
         q.order_bys.append(q.get(data['key']))
     
-    # Grouping by
-    potential_groupings = list(data['columns'])
-    if data['key'] != None:
-        potential_groupings.append(data['key'])
+    for o in data['orderby']:
+        order_col = q.get(o['column'], pure=True)
+        
+        if o['order'] == "DESC":
+            order_func = order_col.desc()
+        elif o['order'] == "ASC":
+            order_func = order_col.asc()
+        else:
+            raise KeyError("No ordering of '%s'" % o['order'])
+        
+        q.order_bys.append(order_func)
     
-    prelude = lambda i: data['group_by_funcs'].get(i, "-") == "-"
-    for pg in filter(prelude, potential_groupings):
-        q.group_bys.append(q.get(pg, pure=True))
+    # Grouping by
+    if data['group_by']:
+        potential_groupings = list(data['columns'])
+        if data['key'] != None:
+            potential_groupings.append(data['key'])
+        
+        prelude = lambda i: data['group_by_funcs'].get(i, "-") == "-"
+        for pg in filter(prelude, potential_groupings):
+            q.group_bys.append(q.get(pg, pure=True))
     
     if len(q.columns) == 0:
         return [], q
