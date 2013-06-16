@@ -285,13 +285,20 @@ def raw_query(request):
     data = the_query.extract_data()
     
     results, c_query = query_f.build(data)
+    raw_query = pretty_sql.compile_query(results)
+    
+    explain = []
+    for e in config['DBSession'].execute("EXPLAIN ANALYZE %s" % raw_query):
+        explain.append(str(e[0]))
     
     return dict(
         title     = "Raw query",
         layout    = layout,
         the_user  = the_user,
         the_query = pretty_sql.prettify(results),
-        html_f = html_f,
+        explain   = "\n".join(explain),
+        query_id  = query_id,
+        data      = data,
     )
 
 def delete_query(request):

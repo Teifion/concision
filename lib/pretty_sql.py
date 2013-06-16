@@ -21,12 +21,8 @@ def prettify(alchemy_query, html=True):
     q_str, params = semi_compile(alchemy_query)
     
     for n in _newlines:
-        q_str = n.sub(r"\\n \1 ", q_str)
+        q_str = n.sub("\n" + r"\1 ", q_str)
     
-    if html:
-        q_str = q_str.replace("\n", "\n<br />")
-    
-    return q_str
     return q_str % params
 
 def semi_compile(query):
