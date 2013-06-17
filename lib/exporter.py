@@ -47,5 +47,6 @@ def json_export(obj):
 datetime_convert = re.compile(r'"([0-9]{1,2}):([0-9]{1,2}) ([0-9]{1,2})/([0-9]{1,2})/([0-9]{2,4})"')
 date_convert = re.compile(r'"([0-9]{1,2})/([0-9]{1,2})/([0-9]{2,4})"')
 def graph_convert(data):
+    data = datetime_convert.sub(r"Date.UTC(\5, \4, \3, \2, \1)", data)
     data = date_convert.sub(r"Date.UTC(\3, \2, \1)", data)
     return data

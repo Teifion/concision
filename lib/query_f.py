@@ -170,4 +170,5 @@ def check_query_data(data):
     data['group_by']       = data.get('group_by', False)
     data['group_by_funcs'] = data.get('group_by_funcs', {})
     data['orderby']        = data.get('orderby', [])
+    data['joins']          = data.get('joins', [])
     return data

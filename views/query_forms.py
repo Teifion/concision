@@ -10,7 +10,7 @@ from ..models import (
 )
 
 # import json
-# from ..lib import html_f, consts
+from ..lib import joins
 from .. import config
 
 def edit_columns(request):
@@ -92,10 +92,7 @@ def delete_filter(request):
     filter_id = int(request.params['f'])
     existing_filters = the_query.jdata.get('filters', [])
     
-    try:
-        existing_filters = existing_filters[:filter_id] + existing_filters[filter_id+1:]
-    except Exception:
-        raise
+    existing_filters = existing_filters[:filter_id] + existing_filters[filter_id+1:]
     
     the_query.jdata['filters'] = existing_filters
     the_query.compress_data()
@@ -188,7 +185,7 @@ def edit_orderby(request):
 
 def delete_orderby(request):
     request.do_not_log = True
-    config['get_user_func'](request)
+    # config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
@@ -197,10 +194,7 @@ def delete_orderby(request):
     orderby_id = int(request.params['o'])
     existing_orderby = the_query.jdata.get('orderby', [])
     
-    try:
-        existing_orderby = existing_orderby[:orderby_id] + existing_orderby[orderby_id+1:]
-    except Exception:
-        raise
+    existing_orderby = existing_orderby[:orderby_id] + existing_orderby[orderby_id+1:]
     
     the_query.jdata['orderby'] = existing_orderby
     the_query.compress_data()
@@ -208,3 +202,53 @@ def delete_orderby(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#orderby" % request.route_url("concision.query.edit", query_id=query_id))
+
+def add_join(request):
+    request.do_not_log = True
+    # the_user  = config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    new_join = {
+        "left": request.params['left'],
+        "right": request.params['right'],
+    }
+    
+    new_source = request.params['right'].split(".")[0]
+    
+    existing_joins = the_query.jdata.get('joins', [])
+    existing_joins.append(new_join)
+    the_query.jdata['joins'] = existing_joins
+    the_query.jdata['sources'].append(new_source)
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#join" % request.route_url("concision.query.edit", query_id=query_id))
+
+def delete_join(request):
+    request.do_not_log = True
+    # config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    join_id = int(request.params['j'])
+    the_query.jdata = joins.remove_join(data, join_id)
+    
+    # existing_joins = the_query.jdata.get('join', [])
+    
+    # join_to_remove = existing_joins[join_id]
+    # source_to_remove = join_to_remove.split("")
+    
+    # existing_joins = existing_joins[:join_id] + existing_joins[join_id+1:]
+    
+    # the_query.jdata['join'] = existing_joins
+    # the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#join" % request.route_url("concision.query.edit", query_id=query_id))

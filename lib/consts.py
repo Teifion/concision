@@ -27,6 +27,7 @@ group_funcs = {
     "MAX": "Maximum",
     "MIN": "Minimum",
     "COUNT": "Count",
+    "ARRAY": "Array",
 }
 
 group_lookup = {
@@ -35,6 +36,7 @@ group_lookup = {
     "MAX": func.max,
     "MIN": func.min,
     "COUNT": func.count,
+    "ARRAY": func.array_agg,
 }
 
 orderby = {

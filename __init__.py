@@ -52,15 +52,10 @@ def includeme(config):
     config.add_route('concision.query.edit_orderby', '/concision/query/edit_orderby/{query_id}')
     config.add_route('concision.query.delete_orderby', '/concision/query/delete_orderby/{query_id}')
     
-    config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
+    config.add_route('concision.query.add_join', '/concision/query/add_join/{query_id}')
+    config.add_route('concision.query.delete_join', '/concision/query/delete_join/{query_id}')
     
-    config.add_route('concision.query.new', '/concision/query/new')
-    config.add_route('concision.query.edit', '/concision/query/edit/{query_id}')
-    config.add_route('concision.query.delete', '/concision/query/delete/{query_id}')
-    config.add_route('concision.query.view', '/concision/query/view/{query_id}')
-    config.add_route('concision.query.graph', '/concision/query/graph/{query_id}')
-    config.add_route('concision.query.export', '/concision/query/export/{query_id}')
-    config.add_route('concision.query.raw', '/concision/query/raw/{query_id}')
+    config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
     
     # Now add the views
     config.add_view(views.menu, route_name='concision.menu',
@@ -85,6 +80,18 @@ def includeme(config):
     config.add_view(views.add_orderby, route_name='concision.query.add_orderby', permission='concision_edit')
     config.add_view(views.edit_orderby, route_name='concision.query.edit_orderby', permission='concision_edit')
     config.add_view(views.delete_orderby, route_name='concision.query.delete_orderby', permission='concision_edit')
+    
+    config.add_view(views.add_join, route_name='concision.query.add_join', permission='concision_edit')
+    config.add_view(views.delete_join, route_name='concision.query.delete_join', permission='concision_edit')
+    
+    # Main query actions
+    config.add_route('concision.query.new', '/concision/query/new')
+    config.add_route('concision.query.edit', '/concision/query/edit/{query_id}')
+    config.add_route('concision.query.delete', '/concision/query/delete/{query_id}')
+    config.add_route('concision.query.view', '/concision/query/view/{query_id}')
+    config.add_route('concision.query.graph', '/concision/query/graph/{query_id}')
+    config.add_route('concision.query.export', '/concision/query/export/{query_id}')
+    config.add_route('concision.query.raw', '/concision/query/raw/{query_id}')
     
     config.add_view(views.new_query, route_name='concision.query.new',
         renderer='templates/queries/new.pt', permission='concision_edit')

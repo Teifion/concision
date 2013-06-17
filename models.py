@@ -39,6 +39,7 @@ class ConcisionSource(object):
         
         self.mandatory_filters = kwargs.get('mandatory_filters', (lambda:()))
         
+        self.allow_join = kwargs.get('allow_join', [])
         self.aliases = kwargs.get('aliases', {})
         
         if "keys" in kwargs:
