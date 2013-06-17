@@ -27,14 +27,6 @@
                 <th>Description</th>
             </tr>
             <tr>
-                <td>Order by</td>
-                <td>Allows results of a query to be ordered based on one or more fields.</td>
-            </tr>
-            <tr>
-                <td>Raw</td>
-                <td>Allows the exporting of the raw query produced by Concision. Probably of interest to those that want to learn more.</td>
-            </tr>
-            <tr>
                 <td>Multiple sources</td>
                 <td>Joining multiple tables together (i.e. sales against audit stats).</td>
             </tr>
