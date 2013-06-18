@@ -294,7 +294,7 @@
             </div>
             
             <div id="join">
-                <div class="error">This section is not only still under development. Please feel free to use it but do be aware it's more likely to break</div>
+                <div class="error">While technically this section works, I've not found a good way to demonstrate it's use so please be aware it may break things.</div>
                 
                 <div class="tooltip_right">
                     <div id="join_tooltip">
