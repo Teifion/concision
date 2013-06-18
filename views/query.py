@@ -67,80 +67,6 @@ def source(request):
         aggregate_sources = {k:v for k, v in config['sources'].items() if v.query_as_aggregate},
     )
 
-# def columns(request):
-#     the_user = config['get_user_func'](request)
-#     layout   = get_renderer(config['layout']).implementation()
-    
-#     query_id = int(request.matchdict['query_id'])
-#     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-#     data = the_query.extract_data()
-    
-#     sources = [config['sources'][s] for s in data['sources']]
-#     existing_columns = data.get('columns', [])
-    
-#     return dict(
-#         title            = "Query filters",
-#         layout           = layout,
-#         the_user         = the_user,
-        
-#         html_f           = html_f,
-#         the_query        = the_query,
-#         qdata            = data,
-#         sources          = config['sources'],
-#         existing_columns = existing_columns,
-#     )
-
-# def filters(request):
-#     the_user = config['get_user_func'](request)
-#     layout   = get_renderer(config['layout']).implementation()
-    
-#     query_id = int(request.matchdict['query_id'])
-#     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-#     data = the_query.extract_data()
-    
-#     columns = []
-#     for s in data['sources']:
-#         the_source = config['sources'][s]
-#         columns.extend([("%s.%s" % (s, c),the_source.column_labels.get(c, c)) for c in the_source.columns])
-    
-#     existing_filters = data.get('filters', [])
-    
-#     return dict(
-#         title            = "Query filters",
-#         layout           = layout,
-#         the_user         = the_user,
-        
-#         html_f           = html_f,
-#         the_query        = the_query,
-#         existing_filters = existing_filters,
-#         sources          = config['sources'],
-#         columns          = columns,
-#         operators        = consts.operators,
-#     )
-
-# def key(request):
-#     the_user = config['get_user_func'](request)
-#     layout   = get_renderer(config['layout']).implementation()
-    
-#     query_id = int(request.matchdict['query_id'])
-#     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
-#     data = the_query.extract_data()
-    
-#     sources = [config['sources'][s] for s in data['sources']]
-#     existing_key = data.get('key', "")
-    
-#     return dict(
-#         title            = "Query filters",
-#         layout           = layout,
-#         the_user         = the_user,
-        
-#         html_f           = html_f,
-#         the_query        = the_query,
-#         qdata            = data,
-#         sources          = config['sources'],
-#         existing_key     = existing_key,
-#     )
-
 def edit_query(request):
     the_user = config['get_user_func'](request)
     layout   = get_renderer(config['layout']).implementation()
@@ -163,10 +89,10 @@ def edit_query(request):
     # Group by
     selected_columns = defaultdict(list)
     for s in data['sources']:
-        the_source = config['sources'][s]
         prelude = lambda c: '%s.%s' % (s, c) in data.get('columns', []) or '%s.%s' % (s, c) == data.get('key', "")
         
-        selected_columns[s] = filter(prelude, the_source.columns)
+        the_source = config['sources'][s]
+        selected_columns[s] = list(filter(prelude, the_source.columns))
     
     # Joins
     current_source_joins = joins.current_source_joins(data)

@@ -31,6 +31,10 @@
                 <td>Joining multiple tables together (i.e. sales against audit stats).</td>
             </tr>
             <tr>
+                <td>Enums</td>
+                <td>Numbers with semantic value converted as such (e.g. Location)</td>
+            </tr>
+            <tr>
                 <td>Sharing</td>
                 <td>Allow collaborative editing/viewing. Also the ability to duplicate queries for someone else.</td>
             </tr>

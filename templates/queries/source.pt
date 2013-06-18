@@ -29,7 +29,6 @@
         <div id="query_type" style="float:left;width:650px;">
             <ul>
                 <li><a href="#single">Single</a></li>
-                <li><a href="#aggregate">Aggregate</a></li>
             </ul>
             <div id="single">
                 <form action="${request.route_url('concision.query.source', query_id=the_query.id)}" method="post" accept-charset="utf-8">
@@ -38,11 +37,6 @@
                     <input type="hidden" name="mode" id="mode" value="single" />
                     <input type="submit" value="Next" name="form.submitted" class="inbutton" />
                 </form>
-                
-            </div>
-            
-            <div id="aggregate">
-                Not implemented
             </div>
         </div>
         

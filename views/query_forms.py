@@ -237,17 +237,8 @@ def delete_join(request):
     the_query.extract_data()
     
     join_id = int(request.params['j'])
-    the_query.jdata = joins.remove_join(data, join_id)
-    
-    # existing_joins = the_query.jdata.get('join', [])
-    
-    # join_to_remove = existing_joins[join_id]
-    # source_to_remove = join_to_remove.split("")
-    
-    # existing_joins = existing_joins[:join_id] + existing_joins[join_id+1:]
-    
-    # the_query.jdata['join'] = existing_joins
-    # the_query.compress_data()
+    the_query.jdata = joins.remove_join(the_query.jdata, join_id)
+    the_query.compress_data()
     
     config['DBSession'].add(the_query)
     

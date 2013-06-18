@@ -202,48 +202,32 @@
                         &nbsp;
                     </div>
                 </div>
+                <script type="text/javascript" charset="utf-8">
+                    function group_by_toggle_func ()
+                    {
+                        var checked = $('#group_by_toggle').is(':checked');
+                        
+                        if (checked)
+                        {
+                            $('#group_by_container').show();
+                        }
+                        else
+                        {
+                            $('#group_by_container').hide();
+                        }
+                    }
+                    
+                    $(document).ready(function() {
+                        group_by_toggle_func();
+                    });
+                </script>
                 
                 <form action="${request.route_url('concision.query.edit_groupby', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    <script type="text/javascript" charset="utf-8">
-                        function old_group_by_toggle_func ()
-                        {
-                            var checked = $('#group_by_toggle').is(':checked');
-                            var divs = '${', '.join(['#%s select' % s for s,ss in relevant_sources])}';
-                            
-                            if (checked)
-                            {
-                                $('#group_by_div_${s} select').attr('disabled', false);
-                            }
-                            else
-                            {
-                                $('#group_by_div_${s} select').attr('disabled', true);
-                            }
-                        }
-                        
-                        function group_by_toggle_func ()
-                        {
-                            var checked = $('#group_by_toggle').is(':checked');
-                            
-                            if (checked)
-                            {
-                                $('#group_by_container').show();
-                            }
-                            else
-                            {
-                                $('#group_by_container').hide();
-                            }
-                        }
-                        
-                        $(document).ready(function() {
-                            group_by_toggle_func();
-                        });
-                    </script>
                     <label for="group_by_toggle">Enable grouping:</label>&nbsp;
                     <input type="checkbox" name="group_by" id="group_by_toggle" value="true" tal:attributes="checked data.get('group_by')" onchange="group_by_toggle_func();"/>
                     <br /><br />
-                    
                     <div id="group_by_container">
-                        <div tal:repeat="(s, the_source) relevant_sources" id="group_by_div_${s}">
+                        <div style="float:left; margin: 0 10px;" tal:repeat="(s, the_source) relevant_sources">
                             <table border="0" cellspacing="0" cellpadding="5">
                                 <tr>
                                     <td colspan="2" style="text-align:center;">
@@ -259,7 +243,8 @@
                             </table>
                         </div>
                     </div>
-                    <input type="submit" value="Save grouping" name="form.submitted" class="inbutton" />
+                    <div style="clear:left;">&nbsp;</div>
+                    <input type="submit" value="Save grouping changes" name="form.submitted" class="inbutton"/>
                 </form>
                 <div style="clear:right;">&nbsp;</div>
             </div>
@@ -319,7 +304,7 @@
                             ${j['right']}
                         </td>
                         <td class="button_cell" width="100" style="padding-left:0">
-                            <a href="${request.route_url('concision.query.delete_orderby', query_id=the_query.id)}?j=${repeat.j.index}" class="button red_button">Delete</a>
+                            <a href="${request.route_url('concision.query.delete_join', query_id=the_query.id)}?j=${repeat.j.index}" class="button red_button">Delete</a>
                         </td>
                     </tr>
                     <tr tal:condition="len(data.get('joins', [])) > 0">
