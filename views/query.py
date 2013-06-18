@@ -158,7 +158,7 @@ def edit_query(request):
     columns = []
     for s in data['sources']:
         the_source = config['sources'][s]
-        columns.extend([("%s.%s" % (s, c),the_source.column_labels.get(c, c)) for c in the_source.columns])
+        columns.extend([("%s.%s" % (s, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.columns])
     
     # Group by
     selected_columns = defaultdict(list)

@@ -15,6 +15,7 @@ class CQuery(object):
         self.filters   = []
         self.order_bys = []
         self.group_bys = []
+        self.joins     = []
     
     def check_for_aliases(self, data):
         """
@@ -44,7 +45,24 @@ class CQuery(object):
                 local_column = config['metadata'].tables[t].columns[c]
                 alias_column = getattr(alias_instance, the_alias['join_on'])
                 
-                self.filters.append(local_column == alias_column)
+                self.joins.append((alias_instance, local_column == alias_column))
+                # self.filters.append(local_column == alias_column)
+                
+                """
+                SELECT statline_outbound_qfup.the_date AS statline_outbound_qfup_the_date,
+                    statline_outbound_qfup.apv AS statline_outbound_qfup_apv,
+                    statline_outbound_qfup.vph AS statline_outbound_qfup_vph
+                FROM statline_outbound_qfup,
+                    users AS agent_table
+                
+                WHERE agent_table.name = %(name_1)s AND statline_outbound_qfup.agent > %(agent_1)s ORDER BY statline_outbound_qfup.the_date LIMIT %(param_1)s
+                """
+    
+    def get_raw(self, identifier):
+        """Gets the column, ignoring anything about aliases etc"""
+        table, column = identifier.split('.')
+        table_source = config['sources'][table]
+        return config['metadata'].tables[table].columns[column]
     
     def get(self, identifier, use_alias=True, pure=False):
         """
@@ -119,7 +137,6 @@ def build(data):
         q.filters.append(op_func(value))
     
     # Mandatory filters
-    columns = []
     for s in data['sources']:
         the_source = config['sources'][s]
         q.filters.extend(the_source.mandatory_filters())
@@ -153,15 +170,32 @@ def build(data):
     if len(q.columns) == 0:
         return [], q
     
-    # For debug
-    # print("\n\n")
-    # print(q.columns)
-    # print(q.filters)
-    # print(q.order_bys)
-    # print(q.group_bys)
-    # print("\n\n")
+    the_query = config['DBSession'].query(*q.columns).filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys)
     
-    return config['DBSession'].query(*q.columns).filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys).limit(400), q
+    for j in data['joins']:
+        left = q.get_raw(j['left'])
+        right = q.get_raw(j['right'])
+        
+        target_table = config['sources'][j['right'].split(".")[0]].db_class
+        
+        the_join = (target_table, (left == right))
+        q.joins.append(the_join)
+    
+    # Add all calculated joins and all filter/alias related ones too
+    for j in q.joins:
+        the_query = the_query.join(*j)
+    
+    # For debug
+    print("\n\n")
+    print(q.columns)
+    print(q.filters)
+    print(q.order_bys)
+    print(q.group_bys)
+    print(q.joins)
+    print("\n\n")
+    
+    the_query = the_query.limit(400)
+    return the_query, q
 
 def check_query_data(data):
     data['key']            = data.get('key', None)
