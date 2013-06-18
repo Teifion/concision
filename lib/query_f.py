@@ -46,17 +46,6 @@ class CQuery(object):
                 alias_column = getattr(alias_instance, the_alias['join_on'])
                 
                 self.joins.append((alias_instance, local_column == alias_column))
-                # self.filters.append(local_column == alias_column)
-                
-                """
-                SELECT statline_outbound_qfup.the_date AS statline_outbound_qfup_the_date,
-                    statline_outbound_qfup.apv AS statline_outbound_qfup_apv,
-                    statline_outbound_qfup.vph AS statline_outbound_qfup_vph
-                FROM statline_outbound_qfup,
-                    users AS agent_table
-                
-                WHERE agent_table.name = %(name_1)s AND statline_outbound_qfup.agent > %(agent_1)s ORDER BY statline_outbound_qfup.the_date LIMIT %(param_1)s
-                """
     
     def get_raw(self, identifier):
         """Gets the column, ignoring anything about aliases etc"""
@@ -112,11 +101,11 @@ def build(data):
     q.check_for_aliases(data)
     
     # columns
-    if data['key'] != None:
-        q.columns.append(q.get(data['key']))
-    
     for c in data['columns']:
         q.columns.append(q.get(c))
+    
+    if data['key'] != None:
+        q.columns.append(q.get(data['key']))
     
     # Filters
     for f in data['filters']:
@@ -170,7 +159,7 @@ def build(data):
     if len(q.columns) == 0:
         return [], q
     
-    the_query = config['DBSession'].query(*q.columns).filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys)
+    the_query = config['DBSession'].query(*q.columns)
     
     for j in data['joins']:
         left = q.get_raw(j['left'])
@@ -185,16 +174,17 @@ def build(data):
     for j in q.joins:
         the_query = the_query.join(*j)
     
-    # For debug
-    print("\n\n")
-    print(q.columns)
-    print(q.filters)
-    print(q.order_bys)
-    print(q.group_bys)
-    print(q.joins)
-    print("\n\n")
+    the_query = the_query.filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys).limit(400)
     
-    the_query = the_query.limit(400)
+    # For debug
+    # print("\n\n")
+    # print(q.columns)
+    # print(q.filters)
+    # print(q.order_bys)
+    # print(q.group_bys)
+    # print(q.joins)
+    # print("\n\n")
+    
     return the_query, q
 
 def check_query_data(data):

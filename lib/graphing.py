@@ -25,16 +25,19 @@ def convert(results, c_query, table_headers):
     first_key = None
     for ri, r in enumerate(results):
         if first_key == None:
-            first_key = r[0]
+            print("\n\n")
+            print(r)
+            print("\n\n")
+            first_key = r[-1]
         
-        for i, c in enumerate(r):
-            if i == 0: continue
+        for i, c in enumerate(r[:-1]):
+            # if i == len(r): continue
             # series[i-1]['data'].append(c)
             
-            series[i-1]['data'].append({
-                "name": r[0].strftime("%d/%m/%Y"),
+            series[i]['data'].append({
+                "name": r[-1].strftime("%d/%m/%Y"),
                 "y": c,
-                "x": r[0],
+                "x": r[-1],
             })
     
     json_series = json.dumps(series, default=exporter.json_export)
