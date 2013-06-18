@@ -94,7 +94,7 @@
                             <input type="hidden" name="form.submitted" value="form.submitted" />
                             
                             <td>
-                                ${structure:html_f.option_box("column", columns, custom_id="", selected=f['column'])}
+                                ${structure:html_f.option_box("column", columns, custom_id="", selected=f['column'], style="max-width:220px;")}
                             </td>
                             <td>
                                 ${structure:html_f.option_box("operator", consts.operators, custom_id="", selected=f['operator'])}
@@ -118,7 +118,7 @@
                             <input type="hidden" name="form.submitted" value="form.submitted" />
                             
                             <td>
-                                ${structure:html_f.option_box("column", columns, custom_id="")}
+                                ${structure:html_f.option_box("column", columns, custom_id="", style="max-width:220px;")}
                             </td>
                             <td>
                                 ${structure:html_f.option_box("operator", consts.operators, custom_id="")}
@@ -158,7 +158,7 @@
                             <input type="hidden" name="form.submitted" value="form.submitted" />
                             
                             <td>
-                                ${structure:html_f.option_box("column", columns, custom_id="", selected=o['column'])}
+                                ${structure:html_f.option_box("column", columns, custom_id="", selected=o['column'], style="max-width:220px;")}
                             </td>
                             <td>
                                 ${structure:html_f.option_box("order", consts.orderby, custom_id="", selected=o['order'])}
@@ -179,7 +179,7 @@
                             <input type="hidden" name="form.submitted" value="form.submitted" />
                             
                             <td>
-                                ${structure:html_f.option_box("column", columns, custom_id="")}
+                                ${structure:html_f.option_box("column", columns, custom_id="", style="max-width:220px;")}
                             </td>
                             <td>
                                 ${structure:html_f.option_box("order", consts.orderby, custom_id="")}
@@ -257,8 +257,8 @@
                 </div>
                 
                 <form action="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    <table border="0" cellspacing="0" cellpadding="5">
-                        <div tal:repeat="(s, the_source) relevant_sources">
+                    <div style="float:left; margin: 0 10px;" tal:repeat="(s, the_source) relevant_sources">
+                        <table border="0" cellspacing="0" cellpadding="5">
                             <tr>
                                 <td colspan="2" style="text-align:center;">
                                     <strong>${the_source.label}</strong>
@@ -269,9 +269,10 @@
                                 <td><label for="${s}.${c}_key">${the_source.column_labels[c]}</label></td>
                                 <td><input type="radio" name="query_key" id="${s}.${c}_key" value="${s}.${c}" tal:attributes="checked '%s.%s' % (s, c) == data.get('key', '')"/></td>
                             </tr>
-                        </div>
-                    </table>
+                        </table>
+                    </div>
                     
+                    <div style="clear:left;">&nbsp;</div>
                     <input type="submit" value="Save new key" name="form.submitted" class="inbutton" /><br />
                     <a href="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" class="inbutton red_button" tal:condition="data.get('key', None) != None">Delete key</a>
                 </form>
@@ -279,7 +280,7 @@
             </div>
             
             <div id="join">
-                <div class="error">While technically this section works, I've not found a good way to demonstrate it's use so please be aware it may break things.</div>
+                <div class="error">While technically this section works, I've not found a good way to demonstrate it's use so please be aware it lacks any documentation.</div>
                 
                 <div class="tooltip_right">
                     <div id="join_tooltip">
