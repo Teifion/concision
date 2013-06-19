@@ -9,9 +9,10 @@
     <div metal:fill-slot="content">
         
         <h2>Alpha</h2>
-        <h4>18/6/2013</h4>
+        <h4>20/6/2013</h4>
         <ul>
             <li>Added joins (no documentation yet sorry). This will allow two data sources to be connected together in the same query. The problem is I can't think of what two sources we'd want to connect this way.</li>
+            <li>Added "in" filter condition</li>
         </ul>
         <br /><br />
         
