@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from collections import defaultdict
 
 operators = {
     "=": "equal to",
@@ -7,6 +8,7 @@ operators = {
     ">=": "greater than or equal to",
     "<": "less than",
     "<=": "less than or equal to",
+    "in": "in list",
 }
 
 operator_lookup = {
@@ -18,7 +20,14 @@ operator_lookup = {
     
     "=":  "__eq__",
     "!=": "__ne__",
+    
+    "in": "in_",
 }
+
+operator_converters = defaultdict(lambda v: v)
+
+# In takes a list of values
+operator_converters['in'] = lambda v: [x.strip() for x in v.replace(",", "\n").split("\n")]
 
 group_funcs = {
     "-": " Group by",

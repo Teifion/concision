@@ -9,6 +9,12 @@
     <div metal:fill-slot="content">
         
         <h2>Alpha</h2>
+        <h4>18/6/2013</h4>
+        <ul>
+            <li>Added joins (no documentation yet sorry). This will allow two data sources to be connected together in the same query. The problem is I can't think of what two sources we'd want to connect this way.</li>
+        </ul>
+        <br /><br />
+        
         <h4>16/6/2013</h4>
         <ul>
             <li>Graphs now put points in their correct dates</li>

@@ -123,6 +123,9 @@ def build(data):
         # Apply conversion functions to it
         value = converters.convert(value, source_table.column_converters.get(c, []))
         
+        # Apply filter type converts to it
+        value = consts.operator_converters[f['operator']](value)
+        
         q.filters.append(op_func(value))
     
     # Mandatory filters

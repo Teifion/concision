@@ -100,10 +100,11 @@
                                 ${structure:html_f.option_box("operator", consts.operators, custom_id="", selected=f['operator'])}
                             </td>
                             <td style="padding:3px;">
-                                <input type="text" name="value" value="${f['value']}" style="display:inline" size="15"/>
+                                <!-- <input type="text" name="value" value="${f['value']}" style="display:inline" size="15"/> -->
+                                <textarea name="value">${f['value']}</textarea>
                             </td>
                             <td class="button_cell" width="100" style="padding-right:0">
-                                <div onclick="$('#filter_${repeat.f.index}').submit();" class="button">Save</div>
+                                <a href="#" onclick="$('#filter_${repeat.f.index}').submit(); return false;" class="button">Save</a>
                             </td>
                             <td class="button_cell" width="100" style="padding-left:0">
                                 <a href="${request.route_url('concision.query.delete_filter', query_id=the_query.id)}?f=${repeat.f.index}" class="button red_button">Delete</a>
@@ -124,7 +125,8 @@
                                 ${structure:html_f.option_box("operator", consts.operators, custom_id="")}
                             </td>
                             <td style="padding:3px;">
-                                <input type="text" name="value" value="" style="display:inline" size="15"/>
+                                <!-- <input type="text" name="value" value="" style="display:inline" size="15"/> -->
+                                <textarea name="value"></textarea>
                             </td>
                             <td class="button_cell" width="100">
                                 <div onclick="$('#new_filter_form').submit();" class="button">Add</div>
