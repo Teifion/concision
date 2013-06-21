@@ -24,7 +24,11 @@ operator_lookup = {
     "in": "in_",
 }
 
-operator_converters = defaultdict(lambda v: v)
+def straight_value():
+    def f(v):
+        return v
+    return f
+operator_converters = defaultdict(straight_value)
 
 # In takes a list of values
 operator_converters['in'] = lambda v: [x.strip() for x in v.replace(",", "\n").split("\n")]
