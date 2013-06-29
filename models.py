@@ -1,7 +1,6 @@
 # I'm not sure how to separate this from the rest of my project
 from ..models import Base as DeclarativeBase
 
-
 from sqlalchemy import (
     Column,
     Integer,
@@ -10,6 +9,10 @@ from sqlalchemy import (
     Boolean,
     
     ForeignKey,
+)
+
+from sqlalchemy.dialects.postgresql import (
+    ARRAY,
 )
 
 import json
@@ -36,6 +39,7 @@ class ConcisionSource(object):
         self.query_as_aggregate = kwargs.get('query_as_aggregate', True)
         self.column_labels = kwargs.get('column_labels', {})
         self.column_converters = kwargs.get('column_converters', {})
+        self.enums = kwargs.get('enums', {})
         
         self.mandatory_filters = kwargs.get('mandatory_filters', (lambda:()))
         
@@ -80,3 +84,12 @@ class StoredQuery(DeclarativeBase):
         else:
             self.data = json.dumps(d)
         return self.data
+
+class ConcisionReport(DeclarativeBase):
+    """A report combines the data output of one or more queries in some way."""
+    
+    __tablename__ = "concision_reports"
+    id       = Column(Integer, primary_key=True)
+    name     = Column(String, nullable=False)
+    creator  = Column(Integer, ForeignKey("users.id"), nullable=False)
+    queries  = Column(ARRAY(Integer), nullable=False)

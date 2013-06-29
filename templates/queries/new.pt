@@ -21,7 +21,7 @@
     <div metal:fill-slot="content">
         <h2>Pick a name for the query</h2>
         <br />
-        <form action="${request.route_url('concision.query.new')}" method="post" accept-charset="utf-8">
+        <form action="${request.route_url('concision.query.add_new')}" method="post" accept-charset="utf-8">
             <label for="name">Name:</label>&nbsp;
             <input type="text" name="name" id="name" value="" style="display:inline-block;" size="40"/>
             <br />

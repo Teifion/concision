@@ -86,6 +86,7 @@ def includeme(config):
     
     # Main query actions
     config.add_route('concision.query.new', '/concision/query/new')
+    config.add_route('concision.query.add_new', '/concision/query/add_new')
     config.add_route('concision.query.edit', '/concision/query/edit/{query_id}')
     config.add_route('concision.query.delete', '/concision/query/delete/{query_id}')
     config.add_route('concision.query.view', '/concision/query/view/{query_id}')
@@ -94,6 +95,8 @@ def includeme(config):
     config.add_route('concision.query.raw', '/concision/query/raw/{query_id}')
     
     config.add_view(views.new_query, route_name='concision.query.new',
+        renderer='templates/queries/new.pt', permission='concision_edit')
+    config.add_view(views.add_new_query, route_name='concision.query.add_new',
         renderer='templates/queries/new.pt', permission='concision_edit')
     config.add_view(views.edit_query, route_name='concision.query.edit',
         renderer='templates/queries/edit.pt', permission='concision_edit')

@@ -27,17 +27,14 @@
         
         <h2>Select a source of data for this query</h2>
         <div id="query_type" style="float:left;width:650px;">
-            <ul>
-                <li><a href="#single">Single</a></li>
-            </ul>
-            <div id="single">
-                <form action="${request.route_url('concision.query.source', query_id=the_query.id)}" method="post" accept-charset="utf-8">
-                    ${structure:html_f.option_box("source", single_sources, element_property="label", custom_id="")}
-                    
-                    <input type="hidden" name="mode" id="mode" value="single" />
-                    <input type="submit" value="Next" name="form.submitted" class="inbutton" />
-                </form>
-            </div>
+            <form action="${request.route_url('concision.query.source', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                <br />
+                ${structure:html_f.option_box("source", single_sources, element_property="label", custom_id="")}
+                <br /><br />
+                
+                <input type="hidden" name="mode" id="mode" value="single" />
+                <input type="submit" value="Next" name="form.submitted" class="inbutton" />
+            </form>
         </div>
         
         <script type="text/javascript" charset="utf-8">

@@ -24,7 +24,6 @@
                 $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
                 $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
                 $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
-                $('#join_tooltip').load("${request.route_url('concision.tooltip', page='join')}");
             });
         </script>
         
@@ -43,7 +42,6 @@
                 <li><a href="#groupby">Grouping</a></li>
                 
                 <li><a href="#graphing">Graphing</a></li>
-                <li><a href="#join">Join</a></li>
                 
                 <li><a href="#other">Other</a></li>
             </ul>
@@ -226,7 +224,7 @@
                 
                 <form action="${request.route_url('concision.query.edit_groupby', query_id=the_query.id)}" method="post" accept-charset="utf-8">
                     <label for="group_by_toggle">Enable grouping:</label>&nbsp;
-                    <input type="checkbox" name="group_by" id="group_by_toggle" value="true" tal:attributes="checked data.get('group_by')" onchange="group_by_toggle_func();"/>
+                    <input type="checkbox" name="group_by" id="group_by_toggle" value="true" tal:attributes="checked data.get('group_by')" onchange="group_by_toggle_func();" onclick="group_by_toggle_func();"/>
                     <br /><br />
                     <div id="group_by_container">
                         <div style="float:left; margin: 0 10px;" tal:repeat="(s, the_source) relevant_sources">
@@ -278,58 +276,6 @@
                     <input type="submit" value="Save new key" name="form.submitted" class="inbutton" /><br />
                     <a href="${request.route_url('concision.query.edit_key', query_id=the_query.id)}" class="inbutton red_button" tal:condition="data.get('key', None) != None">Delete key</a>
                 </form>
-                <div style="clear:right;">&nbsp;</div>
-            </div>
-            
-            <div id="join">
-                <div class="error">While technically this section works, I've not found a good way to demonstrate it's use so please be aware it lacks any documentation.</div>
-                
-                <div class="tooltip_right">
-                    <div id="join_tooltip">
-                        &nbsp;
-                    </div>
-                </div>
-                
-                <table border="0" cellspacing="5" cellpadding="5">
-                    <tr>
-                        <th>Left</th>
-                        <th>Right</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    <tr tal:repeat="j data.get('joins', [])">
-                        <input type="hidden" name="orderby_id" value="${repeat.j.index}" />
-                        <input type="hidden" name="form.submitted" value="form.submitted" />
-                        
-                        <td>
-                            ${j['left']}
-                        </td>
-                        <td>
-                            ${j['right']}
-                        </td>
-                        <td class="button_cell" width="100" style="padding-left:0">
-                            <a href="${request.route_url('concision.query.delete_join', query_id=the_query.id)}?j=${repeat.j.index}" class="button red_button">Delete</a>
-                        </td>
-                    </tr>
-                    <tr tal:condition="len(data.get('joins', [])) > 0">
-                        <td colspan="3"><hr /></td>
-                    </tr>
-                    <tr>
-                        <form action="${request.route_url('concision.query.add_join', query_id=the_query.id)}" method="post" accept-charset="utf-8" id="new_join_form">
-                            <input type="hidden" name="form.submitted" value="form.submitted" />
-                            
-                            <td>
-                                ${structure:html_f.option_box("left", current_source_joins, custom_id="")}
-                            </td>
-                            <td>
-                                ${structure:html_f.option_box("right", possible_source_joins, custom_id="")}
-                            </td>
-                            <td class="button_cell" width="100">
-                                <div onclick="$('#new_join_form').submit();" class="button">Add</div>
-                            </td>
-                        </form>
-                    </tr>
-                </table>
-                
                 <div style="clear:right;">&nbsp;</div>
             </div>
             

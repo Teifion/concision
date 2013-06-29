@@ -2,7 +2,7 @@
     Sources define the source of the data for your query.
 </p>
 
-<p>
+<!-- <p>
     <strong>Single</strong><br />
     A single source is designed when you are after a single distinct identifier. For example; the stats for an individual agent.
 </p>
@@ -10,4 +10,4 @@
 <p>
     <strong>Aggregate</strong> <em>(Not implemented yet)</em><br />
     Aggregate queries are designed for grouping several identifiers together and combining their results. For example; the stats for all the agents from a team, viewed as a team average.
-</p>
+</p> -->

@@ -1,6 +1,9 @@
 <div metal:use-macro="layout">
     <style type="text/css" media="screen" metal:fill-slot="css">
-        
+        .partial td
+        {
+            color: #888;
+        }
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
         <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
@@ -18,7 +21,7 @@
         </ol>
         <br /><br />
         
-        As people suggest ideas I'll add them below so you can see what's already been requested (the more people that request an idea the higher up the list it goes). You can see which ideas have been implemented when by viewing the <a href="${request.route_url('concision.doc.page', page='changelog')}">Change log</a>.
+        As people suggest ideas I'll add them below so you can see what's already been requested (the more people that request an idea the higher up the list it goes). You can see which ideas have been implemented when by viewing the <a href="${request.route_url('concision.doc.page', page='changelog')}">Change log</a>. Items in grey are partially completed.
         
         <br /><br />
         <table border="0" cellspacing="0" cellpadding="5">
@@ -26,7 +29,7 @@
                 <th>Item</th>
                 <th>Description</th>
             </tr>
-            <tr>
+            <tr class="partial">
                 <td>Multiple sources</td>
                 <td>Joining multiple tables together (i.e. sales against audit stats).</td>
             </tr>

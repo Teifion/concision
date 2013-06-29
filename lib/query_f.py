@@ -117,8 +117,17 @@ def build(data):
         # config['sources'][table]
         # if column in table_source.aliases:
         
+        value = f['value']
+        
+        # Enum?
+        if c in source_table.enums:
+            if value in source_table.enums[c]:
+                value = source_table.enums[c].index(value)
+            else:
+                continue
+        
         # Convert it from a string into the relevant database type
-        value = converters.typecast(q.get(f['column'], use_alias=False, pure=True), f['value'])
+        value = converters.typecast(q.get(f['column'], use_alias=False, pure=True), value)
         
         # Apply conversion functions to it
         value = converters.convert(value, source_table.column_converters.get(c, []))
@@ -161,6 +170,7 @@ def build(data):
     
     if len(q.columns) == 0:
         return [], q
+        # q.columns.append("COUNT(*)")
     
     the_query = config['DBSession'].query(*q.columns)
     

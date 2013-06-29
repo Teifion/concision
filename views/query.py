@@ -21,6 +21,26 @@ def new_query(request):
     the_user = config['get_user_func'](request)
     layout   = get_renderer(config['layout']).implementation()
     
+    # if "form.submitted" in request.params:
+    #     the_query = StoredQuery()
+    #     the_query.name = request.params['name'].strip()
+    #     the_query.creator = the_user.id
+    #     the_query.data = json.dumps(query_f.check_query_data({}))
+        
+    #     config['DBSession'].add(the_query)
+        
+    #     q = config['DBSession'].query(StoredQuery.id).filter(StoredQuery.creator == the_query.creator).order_by(StoredQuery.id.desc()).first()[0]
+    #     return HTTPFound(location=request.route_url("concision.query.source", query_id=q))
+    
+    return dict(
+        title    = "Query name",
+        layout   = layout,
+        the_user = the_user,
+    )
+
+def add_new_query(request):
+    the_user = config['get_user_func'](request)
+    
     if "form.submitted" in request.params:
         the_query = StoredQuery()
         the_query.name = request.params['name'].strip()
@@ -31,12 +51,7 @@ def new_query(request):
         
         q = config['DBSession'].query(StoredQuery.id).filter(StoredQuery.creator == the_query.creator).order_by(StoredQuery.id.desc()).first()[0]
         return HTTPFound(location=request.route_url("concision.query.source", query_id=q))
-    
-    return dict(
-        title    = "Query name",
-        layout   = layout,
-        the_user = the_user,
-    )
+    return HTTPFound(location=request.route_url("concision.query.new"))
 
 def source(request):
     the_user = config['get_user_func'](request)
@@ -217,17 +232,25 @@ def raw_query(request):
     data = the_query.extract_data()
     
     results, c_query = query_f.build(data)
-    raw_query = pretty_sql.compile_query(results)
     
-    explain = []
-    for e in config['DBSession'].execute("EXPLAIN ANALYZE %s" % raw_query):
-        explain.append(str(e[0]))
+    explain   = []
+    the_query = ""
+    
+    if results != []:
+        the_query = pretty_sql.prettify(results)
+        
+        raw_query = pretty_sql.compile_query(results)
+        explain = []
+        for e in config['DBSession'].execute("EXPLAIN ANALYZE %s" % raw_query):
+            explain.append(str(e[0]))
+    else:
+        the_query = "No columns selected"
     
     return dict(
         title     = "Raw query",
         layout    = layout,
         the_user  = the_user,
-        the_query = pretty_sql.prettify(results),
+        the_query = the_query,
         explain   = "\n".join(explain),
         query_id  = query_id,
         data      = data,

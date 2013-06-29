@@ -42,7 +42,9 @@ def typecast(filter_col, value):
     """
     
     ptype = type(filter_col.type)
-    value = apply_template(value)
+    
+    if isinstance(value, str):
+        value = apply_template(value)
     
     if ptype == sql_date:
         temp_value = value.replace(" ", "/").replace("-", "/")
