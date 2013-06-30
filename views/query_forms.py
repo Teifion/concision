@@ -13,6 +13,22 @@ from ..models import (
 from ..lib import joins
 from .. import config
 
+def alter_query_type(request):
+    request.do_not_log = True
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    new_type = request.params['new_type']
+    the_query.jdata['type'] = new_type
+    the_query.compress_data()
+    config['DBSession'].add(the_query)
+    
+    if new_type == "advanced":
+        return HTTPFound(location=request.route_url("concision.adv_query.overview", query_id=query_id))
+    return HTTPFound(location="%s#columns" % request.route_url("concision.query.edit", query_id=query_id))
+
 def edit_columns(request):
     request.do_not_log = True
     # the_user  = config['get_user_func'](request)

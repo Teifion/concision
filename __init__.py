@@ -56,6 +56,7 @@ def includeme(config):
     config.add_route('concision.query.delete_join', '/concision/query/delete_join/{query_id}')
     
     config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
+    config.add_route('concision.query.alter_query_type', '/concision/query/alter_query_type/{query_id}')
     
     # Now add the views
     config.add_view(views.menu, route_name='concision.menu',
@@ -83,6 +84,20 @@ def includeme(config):
     
     config.add_view(views.add_join, route_name='concision.query.add_join', permission='concision_edit')
     config.add_view(views.delete_join, route_name='concision.query.delete_join', permission='concision_edit')
+    
+    config.add_view(views.alter_query_type, route_name='concision.query.alter_query_type', permission='concision_edit')
+    
+    # Advanced query view
+    config.add_route('concision.adv_query.columns', '/concision/adv_query/columns/{query_id}')
+    config.add_route('concision.adv_query.do_column', '/concision/adv_query/do_column/{query_id}')
+    
+    config.add_view(views.adv_columns, route_name='concision.adv_query.columns', renderer='templates/adv_queries/columns.pt', permission='concision_edit')
+    config.add_view(views.adv_do_column, route_name='concision.adv_query.do_column', permission='concision_edit')
+    
+    config.add_route('concision.adv_query.overview', '/concision/adv_query/overview/{query_id}')
+    config.add_view(views.adv_overview, route_name='concision.adv_query.overview', renderer='templates/adv_queries/overview.pt', permission='concision_edit')
+    
+    
     
     # Main query actions
     config.add_route('concision.query.new', '/concision/query/new')

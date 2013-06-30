@@ -21,17 +21,6 @@ def new_query(request):
     the_user = config['get_user_func'](request)
     layout   = get_renderer(config['layout']).implementation()
     
-    # if "form.submitted" in request.params:
-    #     the_query = StoredQuery()
-    #     the_query.name = request.params['name'].strip()
-    #     the_query.creator = the_user.id
-    #     the_query.data = json.dumps(query_f.check_query_data({}))
-        
-    #     config['DBSession'].add(the_query)
-        
-    #     q = config['DBSession'].query(StoredQuery.id).filter(StoredQuery.creator == the_query.creator).order_by(StoredQuery.id.desc()).first()[0]
-    #     return HTTPFound(location=request.route_url("concision.query.source", query_id=q))
-    
     return dict(
         title    = "Query name",
         layout   = layout,

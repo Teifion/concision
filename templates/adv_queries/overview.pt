@@ -1,0 +1,83 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        .tooltip_right
+        {
+            float: right;
+            width: 400px;
+            border-left: 1px dotted #555;
+            padding-left: 20px;
+        }
+        
+        .main_content
+        {
+            float: left;
+            width: 620px;
+        }
+        
+        .query_column
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EEF;
+        }
+        
+        select {min-width: 100px;}
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var $tabs = $("#tab_container").tabs();
+                $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
+                
+                /*
+                $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
+                $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
+                $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
+                $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
+                $('#join_tooltip').load("${request.route_url('concision.tooltip', page='join')}");
+                */
+            });
+        </script>
+        
+        <div id="tab_container">
+            <ul>
+                <li><a href="#columns">Columns</a></li>
+                
+                <li><a href="#filters">Filters</a></li>
+                <li><a href="#orderby">Ordering</a></li>
+                <li><a href="#groupby">Grouping</a></li>
+                
+                <li><a href="#graphing">Graphing</a></li>
+                <li><a href="#join">Join</a></li>
+                
+                <li><a href="#other">Other</a></li>
+            </ul>
+            
+            <div id="columns">
+                <div class="tooltip_right">
+                    <div id="columns_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <div tal:repeat="c columns" class="query_column">
+                        <a href="${request.route_url('concision.adv_query.do_column', query_id=query_id)}?column=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
+                        ${c['table']}:
+                        &nbsp;&nbsp;&nbsp;
+                        
+                        ${c['name']}
+                    </div>
+                    
+                    <a href="${request.route_url('concision.adv_query.columns', query_id=query_id)}" class="inbutton">Add column</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+</div>

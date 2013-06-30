@@ -281,6 +281,7 @@
             
             <div id="other">
                 <a href="${request.route_url('concision.query.delete', query_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
+                <a href="${request.route_url('concision.query.alter_query_type', query_id=the_query.id)}?new_type=advanced" class="inbutton">Alter type</a><br />
                 <div style="clear:right;">&nbsp;</div>
             </div>
         </div>

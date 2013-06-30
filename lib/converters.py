@@ -11,6 +11,17 @@ from sqlalchemy.types import (
     DateTime as sql_datetime,
 )
 
+def get_parts(description):
+    """Pass it a name such as "func1 func2 table.column" and it will return the relevant parts"""
+    sections = description.split(" ")
+    
+    table, column = sections[-1].split(".")
+    
+    if len(sections) > 1:
+        return sections[:-1], table, column
+    else:
+        return [], table, column
+
 func_dict = {
     "upper": lambda v: v.upper(),
     "strip": lambda v: v.strip(),
