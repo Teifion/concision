@@ -69,13 +69,25 @@
                     <tr>
                         <td><label for="column">Field:</label></td>
                         <td>
-                            FIELD LIST
+                            ${structure:html_f.option_box("column", seletable_columns)}
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="function">Function:</label></td>
+                        <td><label for="function">Function 1:</label></td>
                         <td>
-                            FUNCTION LIST
+                            ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td><label for="function">Function 2:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td><label for="function">Function 3:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
                         </td>
                     </tr>
                     <tr>

@@ -73,7 +73,7 @@ def option_box(name, elements, selected="", tab_index = -1, custom_id="<>", onch
     
     if insert_dud != False:
         if type(insert_dud) == tuple or type(insert_dud) == list:
-            output.append('<option value="{1}">{0}</option>'.format(*insert_dud))
+            output.append('<option value="{0}">{1}</option>'.format(*insert_dud))
         else:
             output.append('<option value="">{}</option>'.format(insert_dud))
     

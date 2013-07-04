@@ -1,5 +1,6 @@
 from sqlalchemy import func
 from collections import defaultdict
+from functools import partial
 
 operators = {
     "=": "equal to",
@@ -43,14 +44,29 @@ group_funcs = {
     "ARRAY": "Array",
 }
 
-group_lookup = {
+non_group_funcs = {
+    "DATE_TRUNC_YEAR": "Date truncation (Year)",
+    "DATE_TRUNC_MONTH": "Date truncation (Month)",
+    "DATE_TRUNC_DAY": "Date truncation (Day)",
+}
+
+all_funcs = dict(group_funcs)
+for k, v in non_group_funcs.items(): all_funcs[k] = v
+
+function_lookup = {
     "SUM": func.sum,
     "AVG": func.avg,
     "MAX": func.max,
     "MIN": func.min,
     "COUNT": func.count,
     "ARRAY": func.array_agg,
+    
+    "DATE_TRUNC_YEAR": partial(func.date_trunc, 'year'),
+    "DATE_TRUNC_MONTH": partial(func.date_trunc, 'month'),
+    "DATE_TRUNC_DAY": partial(func.date_trunc, 'day'),
 }
+# Used because we still have group_lookup in some places
+group_lookup = function_lookup
 
 orderby = {
     "ASC": "Ascending (0 to 9, A to Z)",
