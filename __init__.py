@@ -37,6 +37,7 @@ def includeme(config):
     from .views import forms as forms
     from .views import documentation as docs
     from .views import general as general
+    from .views import form_ajax as form_ajax
     
     # Standard views
     config.add_route('concision.menu', '/concision/menu')
@@ -142,7 +143,9 @@ def includeme(config):
     config.add_view(query.columns, route_name='concision.query.columns', renderer='templates/queries/columns.pt', permission='concision_edit')
     config.add_view(forms.column, route_name='concision.query.do_column', permission='concision_edit')
     
-    
+    # Ajax
+    config.add_route('concision.ajax.function_dropdown', '/concision/ajax/function_dropdown')
+    config.add_view(form_ajax.function_dropdown, route_name='concision.ajax.function_dropdown', renderer='string', permission='concision_edit')
     
     # Documentation
     config.add_route('concision.doc.menu', '/concision/documentation/menu')

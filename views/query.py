@@ -126,9 +126,9 @@ def columns(request):
     query_f.check_query_data(data)
     
     seletable_columns = []
-    for s in data['sources']:
-        the_source = config['sources'][s]
-        seletable_columns.extend([("%s.%s" % (s, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.columns])
+    for t in data['tables']:
+        the_source = config['sources'][t]
+        seletable_columns.extend([("%s.%s" % (t, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.columns])
     
     return dict(
         title     = "Concision query",

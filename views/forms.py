@@ -46,29 +46,42 @@ def table(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#tables" % request.route_url("concision.query.overview", query_id=query_id))
-    return HTTPFound(location="%s#tables" % request.route_url("concision.query.tables", query_id=query_id))
 
 def column(request):
     request.do_not_log = True
-    # the_user  = config['get_user_func'](request)
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
     the_query.extract_data()
     
-    new_column = {
-        "column": request.params['column'],
-        "functions": [request.params['function0'], request.params['function1'], request.params['function2']],
-    }
-    
+    action = request.params['action']
     existing_columns = the_query.jdata.get('columns', [])
-    existing_columns.append(new_column)
+    
+    if action == "add":
+        new_column = " ".join(filter(None, (
+            request.params['function0'],
+            request.params['function1'],
+            request.params['function2'],
+            request.params['column'],
+        )))
+        
+        existing_columns.append(new_column)
+        
+    elif action == "delete":
+        column_id = int(request.params['column'])
+        existing_columns = existing_columns[:column_id] + existing_columns[column_id+1:]
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
+    
     the_query.jdata['columns'] = existing_columns
     the_query.compress_data()
     
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#columns" % request.route_url("concision.query.columns", query_id=query_id))
+    
+    # {"orderby": [], "group_by_funcs": {}, "filters": [], "tables": ["statline_outbound_qfup"], "group_by": false, "key": null, "joins": [], "columns": []}
 
 # def edit_column(request):
 #     request.do_not_log = True

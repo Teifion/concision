@@ -2,7 +2,7 @@
 Functions used to display information about the query.
 """
 from .. import config
-from . import converters
+from . import converters, consts
 
 """
     # Columns
@@ -47,13 +47,18 @@ def tables(data):
         yield r
 
 def columns(data):
-    for i, description in enumerate(data['columns']):
-        funcs, table, column = converters.get_parts(description)
+    for i, the_column in enumerate(data['columns']):
+        funcs, table, column = converters.get_parts(the_column)
+        
+        func_labels = map(
+            lambda k: consts.all_funcs[k],
+            funcs,
+        )
         
         source = config['sources'][table]
         r = {
             "id": i,
-            "name": "%s %s" % (" ".join(funcs), source.column_labels[column]),
+            "name": "%s %s" % (" ".join(func_labels), source.column_labels[column]),
             "table": source.label,
         }
         
