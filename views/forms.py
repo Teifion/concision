@@ -10,10 +10,45 @@ from ..models import (
 )
 
 # import json
-from ..lib import joins
+from ..lib import query_f
 from .. import config
 
-def adv_do_column(request):
+def table(request):
+    request.do_not_log = True
+    # the_user  = config['get_user_func'](request)
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    data = the_query.extract_data()
+    query_f.check_query_data(data)
+    
+    action = request.params['action']
+    existing_tables = the_query.jdata.get('tables', [])
+    
+    if action == "add":
+        if data['tables'] == []:
+            existing_tables = [request.params['table']]
+        
+        else:
+            raise Exception("Can't have more than 1 table yet")
+            # existing_tables.append(new_table)
+    
+    elif action == "delete":
+        table_id = int(request.params['table'])
+        existing_tables = existing_tables[:table_id] + existing_tables[table_id+1:]
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
+        
+    the_query.jdata['tables'] = existing_tables
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#tables" % request.route_url("concision.query.overview", query_id=query_id))
+    return HTTPFound(location="%s#tables" % request.route_url("concision.query.tables", query_id=query_id))
+
+def column(request):
     request.do_not_log = True
     # the_user  = config['get_user_func'](request)
     
@@ -33,9 +68,9 @@ def adv_do_column(request):
     
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#columns" % request.route_url("concision.adv_query.columns", query_id=query_id))
+    return HTTPFound(location="%s#columns" % request.route_url("concision.query.columns", query_id=query_id))
 
-# def adv_edit_column(request):
+# def edit_column(request):
 #     request.do_not_log = True
 #     # the_user  = config['get_user_func'](request)
     
@@ -59,7 +94,7 @@ def adv_do_column(request):
     
 #     return HTTPFound(location="%s#columns" % request.route_url("concision.query.edit", query_id=query_id))
 
-# def adv_delete_column(request):
+# def delete_column(request):
 #     request.do_not_log = True
 #     # the_user  = config['get_user_func'](request)
     

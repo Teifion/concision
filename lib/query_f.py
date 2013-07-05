@@ -202,6 +202,7 @@ def build(data):
 
 def check_query_data(data):
     data['key']            = data.get('key', None)
+    data['tables']         = data.get('tables', [])
     data['columns']        = data.get('columns', [])
     data['filters']        = data.get('filters', [])
     data['group_by']       = data.get('group_by', False)

@@ -1,0 +1,71 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        .tooltip_right
+        {
+            float: right;
+            width: 400px;
+            border-left: 1px dotted #555;
+            padding-left: 20px;
+        }
+        
+        .main_content
+        {
+            float: left;
+            width: 650px;
+        }
+        
+        .query_table
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EEF;
+        }
+        
+        select {min-width: 100px;}
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}">Query overview</a>
+        <br /><br />
+        
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var $tabs = $("#tab_container").tabs();
+                $('#tables_tooltip').load("${request.route_url('concision.tooltip', page='tables')}");
+            });
+        </script>
+        
+        <div class="tooltip_right">
+            <div id="tables_tooltip">
+                &nbsp;
+            </div>
+        </div>
+        
+        <div class="main_content" tal:condition="data['tables'] == []">
+            <h3>New table</h3>
+            <form action="${request.route_url('concision.query.do_table', query_id=query_id)}" method="post" accept-charset="utf-8">
+                <input type="hidden" name="action" id="action" value="add" />
+                
+                ${structure:html_f.option_box("table", seletable_tables)}
+                <br /><br />
+                
+                <input type="submit" value="Add" name="form.submitted" class="inbutton" />
+            </form>
+        </div>
+        
+        <div class="main_content" tal:condition="data['tables'] != []">
+            <h3>Existing tables</h3>
+            <div tal:repeat="t tables" class="query_table">
+                <a href="${request.route_url('concision.query.do_table', query_id=query_id)}?table=${t['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                
+                ${t['name']}
+            </div>
+            
+            Currently there is no support for adding more than 1 table.
+        </div>
+        <div style="clear:both;">&nbsp;</div>
+    </div>
+</div>

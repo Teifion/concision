@@ -28,10 +28,25 @@ from . import converters
     possible_source_joins = joins.possible_source_joins(data)
     """
 
-def columns(data):
-    # Columns
-    # relevant_sources = [s for s in config['sources'].items() if s[0] in data['sources']]
+def tablist(data):
+    tablist = set(["tables"])
     
+    if len(data.get('tables', [])) > 0:
+        tablist.add('columns')
+    
+    return tablist
+
+def tables(data):
+    for i, t in enumerate(data.get('tables', [])):
+        source = config['sources'][t]
+        r = {
+            "id": i,
+            "name": source.label,
+        }
+        
+        yield r
+
+def columns(data):
     for i, description in enumerate(data['columns']):
         funcs, table, column = converters.get_parts(description)
         
@@ -43,3 +58,6 @@ def columns(data):
         }
         
         yield r
+
+
+

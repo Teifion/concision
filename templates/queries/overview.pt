@@ -14,6 +14,13 @@
             width: 620px;
         }
         
+        .query_table
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EFE;
+        }
+        
         .query_column
         {
             padding: 10px;
@@ -31,6 +38,7 @@
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
                 var $tabs = $("#tab_container").tabs();
+                $('#tables_tooltip').load("${request.route_url('concision.tooltip', page='tables')}");
                 $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
                 
                 /*
@@ -45,19 +53,40 @@
         
         <div id="tab_container">
             <ul>
-                <li><a href="#columns">Columns</a></li>
+                <li><a href="#tables">Tables</a></li>
+                <li><a href="#columns" tal:condition="'columns' in tablist">Columns</a></li>
                 
-                <li><a href="#filters">Filters</a></li>
-                <li><a href="#orderby">Ordering</a></li>
-                <li><a href="#groupby">Grouping</a></li>
+                <li><a href="#filters" tal:condition="'filters' in tablist">Filters</a></li>
+                <li><a href="#orderby" tal:condition="'ordereing' in tablist">Ordering</a></li>
+                <li><a href="#groupby" tal:condition="'grouping' in tablist">Grouping</a></li>
                 
-                <li><a href="#graphing">Graphing</a></li>
-                <li><a href="#join">Join</a></li>
+                <li><a href="#graphing" tal:condition="'graphing' in tablist">Graphing</a></li>
+                <li><a href="#join" tal:condition="'joins' in tablist">Join</a></li>
                 
                 <li><a href="#other">Other</a></li>
             </ul>
             
-            <div id="columns">
+            <div id="tables" tal:condition="'tables' in tablist">
+                <div class="tooltip_right">
+                    <div id="tables_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <div tal:repeat="t tables" class="query_table">
+                        <a href="${request.route_url('concision.query.do_table', query_id=query_id)}?table=${t['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
+                        ${t['name']}:
+                    </div>
+                    
+                    <a href="${request.route_url('concision.query.tables', query_id=query_id)}" class="inbutton">Add table</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            
+            <div id="columns" tal:condition="'columns' in tablist">
                 <div class="tooltip_right">
                     <div id="columns_tooltip">
                         &nbsp;
@@ -66,7 +95,7 @@
                 
                 <div class="main_content">
                     <div tal:repeat="c columns" class="query_column">
-                        <a href="${request.route_url('concision.adv_query.do_column', query_id=query_id)}?column=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        <a href="${request.route_url('concision.query.do_column', query_id=query_id)}?column=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
                         
                         ${c['table']}:
                         &nbsp;&nbsp;&nbsp;
@@ -74,10 +103,12 @@
                         ${c['name']}
                     </div>
                     
-                    <a href="${request.route_url('concision.adv_query.columns', query_id=query_id)}" class="inbutton">Add column</a>
+                    <a href="${request.route_url('concision.query.columns', query_id=query_id)}" class="inbutton">Add column</a>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
+            
+            <!-- End of tabs -->
         </div>
     </div>
 </div>

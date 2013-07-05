@@ -32,8 +32,12 @@ def example_config_constructor(config):
     from .concision import example_sources
     concision.add_source(example_sources.stat_table)
 
-from . import views
 def includeme(config):
+    from .views import query as query
+    from .views import forms as forms
+    from .views import documentation as docs
+    from .views import general as general
+    
     # Standard views
     config.add_route('concision.menu', '/concision/menu')
     config.add_route('concision.preferences', '/concision/preferences')
@@ -60,13 +64,6 @@ def includeme(config):
     config.add_route('concision.query.alter_query_type', '/concision/query/alter_query_type/{query_id}')
     
     # Now add the views
-    config.add_view(views.menu, route_name='concision.menu',
-        renderer='templates/general/menu.pt', permission='concision')
-    config.add_view(views.preferences, route_name='concision.preferences',
-        renderer='templates/general/preferences.pt', permission='concision')
-    config.add_view(views.list_queries, route_name='concision.list_queries',
-        renderer='templates/general/list_queries.pt', permission='concision')
-    
     config.add_view(views.source, route_name='concision.query.source',
         renderer='templates/queries/source.pt', permission='concision_edit')
     
@@ -115,25 +112,46 @@ def includeme(config):
         renderer='templates/queries/delete.pt', permission='concision_edit')
     """
     
+    config.add_view(general.menu, route_name='concision.menu',
+        renderer='templates/general/menu.pt', permission='concision')
+    config.add_view(general.preferences, route_name='concision.preferences',
+        renderer='templates/general/preferences.pt', permission='concision')
+    config.add_view(query.list_queries, route_name='concision.list_queries',
+        renderer='templates/general/list_queries.pt', permission='concision')
     
-    # Advanced query view
-    config.add_route('concision.adv_query.columns', '/concision/adv_query/columns/{query_id}')
-    config.add_route('concision.adv_query.do_column', '/concision/adv_query/do_column/{query_id}')
+    # Queries
+    config.add_route('concision.query.new', '/concision/query/new')
+    config.add_route('concision.query.add_new', '/concision/query/add_new')
+    config.add_route('concision.query.overview', '/concision/query/overview/{query_id}')
     
-    config.add_view(views.adv_columns, route_name='concision.adv_query.columns', renderer='templates/adv_queries/columns.pt', permission='concision_edit')
-    config.add_view(views.adv_do_column, route_name='concision.adv_query.do_column', permission='concision_edit')
+    config.add_view(query.new, route_name='concision.query.new', renderer='templates/queries/new.pt', permission='concision_edit')
+    config.add_view(query.new, route_name='concision.query.add_new', renderer='templates/queries/new.pt', permission='concision_edit')
+    config.add_view(query.overview, route_name='concision.query.overview', renderer='templates/queries/overview.pt', permission='concision_edit')
     
-    config.add_route('concision.adv_query.overview', '/concision/adv_query/overview/{query_id}')
-    config.add_view(views.adv_overview, route_name='concision.adv_query.overview', renderer='templates/adv_queries/overview.pt', permission='concision_edit')
+    # Tables
+    config.add_route('concision.query.tables', '/concision/query/tables/{query_id}')
+    config.add_route('concision.query.do_table', '/concision/query/do_table/{query_id}')
+    
+    config.add_view(query.tables, route_name='concision.query.tables', renderer='templates/queries/tables.pt', permission='concision_edit')
+    config.add_view(forms.table, route_name='concision.query.do_table', permission='concision_edit')
+    
+    # Columns
+    config.add_route('concision.query.columns', '/concision/query/columns/{query_id}')
+    config.add_route('concision.query.do_column', '/concision/query/do_column/{query_id}')
+    
+    config.add_view(query.columns, route_name='concision.query.columns', renderer='templates/queries/columns.pt', permission='concision_edit')
+    config.add_view(forms.column, route_name='concision.query.do_column', permission='concision_edit')
+    
+    
     
     # Documentation
     config.add_route('concision.doc.menu', '/concision/documentation/menu')
     config.add_route('concision.doc.page', '/concision/documentation/page/{page}')
     config.add_route('concision.tooltip', '/concision/tooltip/{page}')
     
-    config.add_view(views.doc_menu, route_name='concision.doc.menu',
+    config.add_view(docs.doc_menu, route_name='concision.doc.menu',
         renderer='templates/documentation/menu.pt', permission='concision')
-    config.add_view(views.doc_page, route_name='concision.doc.page', permission='concision')
-    config.add_view(views.tooltip, route_name='concision.tooltip', renderer='string', http_cache=3600)
+    config.add_view(docs.doc_page, route_name='concision.doc.page', permission='concision')
+    config.add_view(docs.tooltip, route_name='concision.tooltip', renderer='string', http_cache=3600)
     
     return config

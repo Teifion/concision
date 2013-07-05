@@ -1,0 +1,34 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        .tooltip_right
+        {
+            float: right;
+            width: 400px;
+            border-left: 1px dotted #555;
+            padding-left: 20px;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8" metal:fill-slot="js">
+        $(document).ready(function() {
+                $('#name').focus();
+            });
+    </script>
+    
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        <h2>Pick a name for the query</h2>
+        <br />
+        <form action="${request.route_url('concision.query.add_new')}" method="post" accept-charset="utf-8">
+            <label for="name">Name:</label>&nbsp;
+            <input type="text" name="name" id="name" value="" style="display:inline-block;" size="40"/>
+            <br />
+            
+            <input type="submit" value="Next" name="form.submitted" class="inbutton" />
+        </form>
+    </div>
+    
+    
+</div>
