@@ -33,6 +33,11 @@ def tablist(data):
     
     if len(data.get('tables', [])) > 0:
         tablist.add('columns')
+        tablist.add('filters')
+    
+    if len(data.get('columns', [])) > 0:
+        tablist.add('groupby')
+        tablist.add('orderby')
     
     return tablist
 

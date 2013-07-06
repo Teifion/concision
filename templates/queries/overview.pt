@@ -57,8 +57,8 @@
                 <li><a href="#columns" tal:condition="'columns' in tablist">Columns</a></li>
                 
                 <li><a href="#filters" tal:condition="'filters' in tablist">Filters</a></li>
-                <li><a href="#orderby" tal:condition="'ordereing' in tablist">Ordering</a></li>
-                <li><a href="#groupby" tal:condition="'grouping' in tablist">Grouping</a></li>
+                <li><a href="#orderby" tal:condition="'orderby' in tablist">Ordering</a></li>
+                <li><a href="#groupby" tal:condition="'groupby' in tablist">Grouping</a></li>
                 
                 <li><a href="#graphing" tal:condition="'graphing' in tablist">Graphing</a></li>
                 <li><a href="#join" tal:condition="'joins' in tablist">Join</a></li>
