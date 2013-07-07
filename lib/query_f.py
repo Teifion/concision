@@ -83,7 +83,8 @@ class CQuery(object):
             
             if use_alias:
                 alias_table = self.aliases[the_alias['name']]
-                return getattr(alias_table, the_alias['column'])
+                the_value = getattr(alias_table, the_alias['column'])
+                return converters.apply_functions(the_value, funcs)
             
             # We're not using the table alias because the
             # version of SQLAlchemy for zope doesn't have what we need
@@ -92,10 +93,14 @@ class CQuery(object):
             target_table = the_alias['table']
             target_column = the_alias['column']
             
-            return config['metadata'].tables[target_table].columns[target_column]
+            the_value = config['metadata'].tables[target_table].columns[target_column]
+            return converters.apply_functions(the_value, funcs)
+            # return config['metadata'].tables[target_table].columns[target_column]
          
         # If not then grab the column itself
-        return config['metadata'].tables[table].columns[column]
+        the_value = config['metadata'].tables[table].columns[column]
+        return converters.apply_functions(the_value, funcs)
+        # return config['metadata'].tables[table].columns[column]
 
 def build(data):
     q = CQuery(check_query_data(data))

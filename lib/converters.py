@@ -83,10 +83,10 @@ def typecast(filter_col, value):
     else:
         raise KeyError("No handler for %s" % ptype)
 
-def apply_functions(the_object, functions):
+def apply_functions(the_value, functions):
     if len(functions) > 0:
         head, tail = functions[0], functions[1:]
         head = consts.function_lookup[head]
-        return head(apply_functions(the_object, tail))
+        return head(apply_functions(the_value, tail))
     else:
-        return the_object
+        return the_value
