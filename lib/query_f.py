@@ -11,11 +11,12 @@ class CQuery(object):
         
         self.aliases = {}
         
-        self.columns   = []
-        self.filters   = []
-        self.order_bys = []
-        self.group_bys = []
-        self.joins     = []
+        self.columns     = []
+        self.filters     = []
+        self.order_bys   = []
+        self.group_bys   = []
+        self.joins       = []
+        self.alias_joins = []
     
     def check_for_aliases(self, data):
         """
@@ -26,7 +27,7 @@ class CQuery(object):
         total_columns = data['columns'] + [data['key']] + [f['column'] for f in data['filters']]
         
         for table_column in filter(None, total_columns):
-            t, c = table_column.split(".")
+            f, t, c = converters.get_parts(table_column)
             table = config['sources'][t]
             
             if c in table.aliases:
@@ -45,11 +46,11 @@ class CQuery(object):
                 local_column = config['metadata'].tables[t].columns[c]
                 alias_column = getattr(alias_instance, the_alias['join_on'])
                 
-                self.joins.append((alias_instance, local_column == alias_column))
+                self.alias_joins.append(local_column == alias_column)
     
     def get_raw(self, identifier):
         """Gets the column, ignoring anything about aliases etc"""
-        table, column = identifier.split('.')
+        func, table, column = converters.get_parts(identifier)
         table_source = config['sources'][table]
         return config['metadata'].tables[table].columns[column]
     
@@ -73,7 +74,7 @@ class CQuery(object):
         """
         Grabs a column or an alias of a column if it's meant to be using one.
         """
-        table, column = identifier.split('.')
+        funcs, table, column = converters.get_parts(identifier)
         table_source = config['sources'][table]
         
         # First check if it's an alias
@@ -112,7 +113,7 @@ def build(data):
         filter_col = q.get(f['column'], pure=True)
         op_func = getattr(filter_col, consts.operator_lookup[f['operator']])
         
-        t, c = f['column'].split(".")
+        funcs, t, c = converters.get_parts(f['column'])
         source_table = config['sources'][t]
         # config['sources'][table]
         # if column in table_source.aliases:
@@ -137,9 +138,12 @@ def build(data):
         
         q.filters.append(op_func(value))
     
+    for aj in q.alias_joins:
+        q.filters.append(aj)
+    
     # Mandatory filters
-    for s in data['sources']:
-        the_source = config['sources'][s]
+    for t in data['tables']:
+        the_source = config['sources'][t]
         q.filters.extend(the_source.mandatory_filters())
     
     # Order bys
@@ -183,20 +187,21 @@ def build(data):
         the_join = (target_table, (left == right))
         q.joins.append(the_join)
     
+    # For debug
+    print("\n\n")
+    print(q.columns)
+    print(q.filters)
+    print(q.order_bys)
+    print(q.group_bys)
+    print(q.joins)
+    print(q.alias_joins)
+    print("\n\n")
+    
     # Add all calculated joins and all filter/alias related ones too
     for j in q.joins:
         the_query = the_query.join(*j)
     
     the_query = the_query.filter(*q.filters).order_by(*q.order_bys).group_by(*q.group_bys).limit(400)
-    
-    # For debug
-    # print("\n\n")
-    # print(q.columns)
-    # print(q.filters)
-    # print(q.order_bys)
-    # print(q.group_bys)
-    # print(q.joins)
-    # print("\n\n")
     
     return the_query, q
 

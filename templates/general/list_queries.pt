@@ -14,15 +14,11 @@
             <tr class="row2">
                 <th>Name</th>
                 <th>&nbsp;</th>
-                <th>&nbsp;</th>
             </tr>
             <tr tal:repeat="the_query query_list" tal:attributes="class 'row%s' % (repeat.the_query.index%2)">
                 <td>${the_query.name}</td>
-                <td class="button_cell" tal:condition="True or the_query.complete">
-                    <a href="${request.route_url('concision.query.view', query_id=the_query.id)}" class="inbutton">View</a>
-                </td>
-                <td class="button_cell" tal:condition="True or not the_query.complete">
-                    <a href="${request.route_url('concision.query.edit', query_id=the_query.id)}" class="inbutton">Edit</a>
+                <td class="button_cell">
+                    <a href="${request.route_url('concision.query.overview', query_id=the_query.id)}" class="inbutton">View</a>
                 </td>
             </tr>
         </table>

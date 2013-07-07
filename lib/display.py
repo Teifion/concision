@@ -36,6 +36,7 @@ def tablist(data):
         tablist.add('filters')
     
     if len(data.get('columns', [])) > 0:
+        tablist.add('execute')
         tablist.add('groupby')
         tablist.add('orderby')
     
@@ -69,5 +70,24 @@ def columns(data):
         
         yield r
 
+def filters(data):
+    for i, the_filter in enumerate(data['filters']):
+        funcs, table, filter = converters.get_parts(the_filter['column'])
+        
+        func_labels = map(
+            lambda k: consts.all_funcs[k],
+            funcs,
+        )
+        
+        source = config['sources'][table]
+        r = {
+            "id": i,
+            "name": "%s %s" % (" ".join(func_labels), source.column_labels[filter]),
+            "table": source.label,
+            "operator": consts.operators[the_filter['operator']],
+            "value": the_filter['value'],
+        }
+        
+        yield r
 
 

@@ -1,0 +1,88 @@
+from pyramid.httpexceptions import HTTPFound
+# from pyramid.response import Response
+
+from pyramid.renderers import get_renderer
+
+from ..models import (
+    StoredQuery,
+)
+
+import json
+
+from ..lib import (
+    html_f,
+    consts,
+    query_f,
+    converters,
+    # graphing,
+    # pretty_sql,
+    # joins,
+    display,
+)
+from .. import config
+
+def view(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    query_id = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    data = the_query.extract_data()
+    query_f.check_query_data(data)
+    
+    results, c_query = query_f.build(data)
+    
+    table_headers = []
+    for tc in [data['key']] + data['columns']:
+        if tc is None: continue
+        f, t, c = converters.get_parts(tc)
+        table_headers.append(config['sources'][t].column_labels.get(c, c))
+    
+    return dict(
+        title    = "Concision query",
+        layout   = layout,
+        the_user = the_user,
+        
+        c_query  = c_query,
+        results  = results,
+        data     = data,
+        query_id = query_id,
+        
+        table_headers = table_headers,
+    )
+
+def graph(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    return dict(
+        title      = "Concision queries",
+        layout     = layout,
+    )
+
+def export(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    return dict(
+        title      = "Concision queries",
+        layout     = layout,
+    )
+
+def raw(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    return dict(
+        title      = "Concision queries",
+        layout     = layout,
+    )
+
+def delete(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    return dict(
+        title      = "Concision queries",
+        layout     = layout,
+    )

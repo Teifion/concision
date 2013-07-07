@@ -1,6 +1,7 @@
 import datetime
 import re
 from decimal import Decimal
+from . import consts
 
 from sqlalchemy.types import (
     Integer as sql_integer,
@@ -81,3 +82,11 @@ def typecast(filter_col, value):
         return value
     else:
         raise KeyError("No handler for %s" % ptype)
+
+def apply_functions(the_object, functions):
+    if len(functions) > 0:
+        head, tail = functions[0], functions[1:]
+        head = consts.function_lookup[head]
+        return head(apply_functions(the_object, tail))
+    else:
+        return the_object

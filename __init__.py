@@ -38,6 +38,7 @@ def includeme(config):
     from .views import documentation as docs
     from .views import general as general
     from .views import form_ajax as form_ajax
+    from .views import query_view as query_view
     
     # Standard views
     config.add_route('concision.menu', '/concision/menu')
@@ -124,10 +125,20 @@ def includeme(config):
     config.add_route('concision.query.new', '/concision/query/new')
     config.add_route('concision.query.add_new', '/concision/query/add_new')
     config.add_route('concision.query.overview', '/concision/query/overview/{query_id}')
+    config.add_route('concision.query.delete', '/concision/query/delete/{query_id}')
+    config.add_route('concision.query.view', '/concision/query/view/{query_id}')
+    config.add_route('concision.query.graph', '/concision/query/graph/{query_id}')
+    config.add_route('concision.query.export', '/concision/query/export/{query_id}')
+    config.add_route('concision.query.raw', '/concision/query/raw/{query_id}')
     
     config.add_view(query.new, route_name='concision.query.new', renderer='templates/queries/new.pt', permission='concision_edit')
     config.add_view(query.new, route_name='concision.query.add_new', renderer='templates/queries/new.pt', permission='concision_edit')
     config.add_view(query.overview, route_name='concision.query.overview', renderer='templates/queries/overview.pt', permission='concision_edit')
+    config.add_view(query_view.view, route_name='concision.query.view', renderer='templates/queries/view.pt', permission='concision')
+    config.add_view(query_view.graph, route_name='concision.query.graph', renderer='templates/queries/graph.pt', permission='concision')
+    config.add_view(query_view.export, route_name='concision.query.export', permission='concision')
+    config.add_view(query_view.raw, route_name='concision.query.raw', renderer='templates/queries/raw.pt', permission='concision')
+    config.add_view(query_view.delete, route_name='concision.query.delete', renderer='templates/queries/delete.pt', permission='concision_edit')
     
     # Tables
     config.add_route('concision.query.tables', '/concision/query/tables/{query_id}')
@@ -142,6 +153,13 @@ def includeme(config):
     
     config.add_view(query.columns, route_name='concision.query.columns', renderer='templates/queries/columns.pt', permission='concision_edit')
     config.add_view(forms.column, route_name='concision.query.do_column', permission='concision_edit')
+    
+    # Filters
+    config.add_route('concision.query.filters', '/concision/query/filters/{query_id}')
+    config.add_route('concision.query.do_filter', '/concision/query/do_filter/{query_id}')
+    
+    config.add_view(query.filters, route_name='concision.query.filters', renderer='templates/queries/filters.pt', permission='concision_edit')
+    config.add_view(forms.filters, route_name='concision.query.do_filter', permission='concision_edit')
     
     # Ajax
     config.add_route('concision.ajax.function_dropdown', '/concision/ajax/function_dropdown')

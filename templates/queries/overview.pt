@@ -28,6 +28,13 @@
             background-color: #EEF;
         }
         
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
         select {min-width: 100px;}
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
@@ -40,9 +47,9 @@
                 var $tabs = $("#tab_container").tabs();
                 $('#tables_tooltip').load("${request.route_url('concision.tooltip', page='tables')}");
                 $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
+                $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
                 
                 /*
-                $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
                 $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
                 $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
                 $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
@@ -50,6 +57,9 @@
                 */
             });
         </script>
+        
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.view', query_id=query_id)}" tal:condition="'execute' in tablist">View results</a>
+        <br /><br />
         
         <div id="tab_container">
             <ul>
@@ -63,6 +73,7 @@
                 <li><a href="#graphing" tal:condition="'graphing' in tablist">Graphing</a></li>
                 <li><a href="#join" tal:condition="'joins' in tablist">Join</a></li>
                 
+                <li><a href="#execute" tal:condition="'execute' in tablist">Execute</a></li>
                 <li><a href="#other">Other</a></li>
             </ul>
             
@@ -80,7 +91,7 @@
                         ${t['name']}:
                     </div>
                     
-                    <a href="${request.route_url('concision.query.tables', query_id=query_id)}" class="inbutton">Add table</a>
+                    <a href="${request.route_url('concision.query.tables', query_id=query_id)}" class="inbutton">Edit tables</a>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -103,7 +114,42 @@
                         ${c['name']}
                     </div>
                     
-                    <a href="${request.route_url('concision.query.columns', query_id=query_id)}" class="inbutton">Add column</a>
+                    <a href="${request.route_url('concision.query.columns', query_id=query_id)}" class="inbutton">Edit columns</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <div id="filters" tal:condition="'filters' in tablist">
+                <div class="tooltip_right">
+                    <div id="filters_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <div tal:repeat="f filters" class="query_filter">
+                        <a href="${request.route_url('concision.query.do_filter', query_id=query_id)}?filter=${f['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
+                        ${f['table']}
+                        
+                        &nbsp;&nbsp;
+                        
+                        ${f['name']}
+                        
+                        &nbsp;&nbsp;
+                        &#8594;
+                        &nbsp;&nbsp;
+                        
+                        ${f['operator']}
+                        
+                        &nbsp;&nbsp;
+                        &#8594;
+                        &nbsp;&nbsp;
+                        
+                        "${f['value']}"
+                    </div>
+                    
+                    <a href="${request.route_url('concision.query.filters', query_id=query_id)}" class="inbutton">Edit filters</a>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>

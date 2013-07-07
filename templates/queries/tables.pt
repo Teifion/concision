@@ -28,7 +28,7 @@
         <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}">Query overview</a>
+        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}#tables">Query overview</a>
         <br /><br />
         
         <script type="text/javascript" charset="utf-8">

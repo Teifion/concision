@@ -14,11 +14,11 @@
             width: 650px;
         }
         
-        .query_column
+        .query_filter
         {
             padding: 10px;
             margin: 5px;
-            background-color: #EEF;
+            background-color: #FEE;
         }
         
         select {min-width: 100px;}
@@ -28,54 +28,59 @@
         <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
     </div>
     <div metal:fill-slot="content">
-        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}#columns">Query overview</a>
+        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}#filters">Query overview</a>
         <br /><br />
         
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
                 var $tabs = $("#tab_container").tabs();
-                $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
-                
-                /*
                 $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
-                $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
-                $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
-                $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
-                $('#join_tooltip').load("${request.route_url('concision.tooltip', page='join')}");
-                */
             });
         </script>
         
         <div class="tooltip_right">
-            <div id="columns_tooltip">
+            <div id="filters_tooltip">
                 &nbsp;
             </div>
         </div>
         
         <div class="main_content">
-            <h3>Existing columns</h3>
-            <div tal:repeat="c columns" class="query_column">
-                <a href="${request.route_url('concision.query.do_column', query_id=query_id)}?column=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+            <h3>Existing filters</h3>
+            <div tal:repeat="f filters" class="query_filter">
+                <a href="${request.route_url('concision.query.do_filter', query_id=query_id)}?filter=${f['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
                 
-                ${c['table']}:
-                &nbsp;&nbsp;&nbsp;
+                ${f['table']}
                 
-                ${c['name']}
+                &nbsp;&nbsp;
+                
+                ${f['name']}
+                
+                &nbsp;&nbsp;
+                &#8594;
+                &nbsp;&nbsp;
+                
+                ${f['operator']}
+                
+                &nbsp;&nbsp;
+                &#8594;
+                &nbsp;&nbsp;
+                
+                "${f['value']}"
             </div>
             
             <br /><br />
-            <h3>New column</h3>
-            <form action="${request.route_url('concision.query.do_column', query_id=query_id)}" method="post" accept-charset="utf-8">
+            <h3>New filter</h3>
+            <form action="${request.route_url('concision.query.do_filter', query_id=query_id)}" method="post" accept-charset="utf-8">
                 <input type="hidden" name="action" id="action" value="add" />
                 
                 <table border="0" cellspacing="0" cellpadding="5">
                     <tr>
-                        <td><label for="column">Field:</label></td>
+                        <td><label for="filter">Field:</label></td>
                         <td>
-                            ${structure:html_f.option_box("column", seletable_columns)}
+                            ${structure:html_f.option_box("filter", seletable_filters)}
                         </td>
                     </tr>
-                    <tr>
+                    <tr style="display:none;">
                         <td><label for="function">Function 1:</label></td>
                         <td>
                             ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
@@ -93,6 +98,30 @@
                             ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
                         </td>
                     </tr>
+                    
+                    <tr>
+                        <td tal:condition="2">&nbsp;</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><label for="operator">Operator:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("operator", consts.operators)}
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td tal:condition="2">&nbsp;</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><label for="value">Value:</label></td>
+                        <td>
+                            <input type="text" name="value" id="value" value="" />
+                        </td>
+                    </tr>
+                    
+                    
                     <tr>
                         <td colspan="2">
                             <input type="submit" value="Add" name="form.submitted" class="inbutton" />

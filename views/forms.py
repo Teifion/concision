@@ -83,6 +83,46 @@ def column(request):
     
     # {"orderby": [], "group_by_funcs": {}, "filters": [], "tables": ["statline_outbound_qfup"], "group_by": false, "key": null, "joins": [], "columns": []}
 
+def filters(request):
+    request.do_not_log = True
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    action = request.params['action']
+    existing_filters = the_query.jdata.get('filters', [])
+    
+    if action == "add":
+        column = " ".join(filter(None, (
+            request.params['function0'],
+            request.params['function1'],
+            request.params['function2'],
+            request.params['filter'],
+        )))
+        
+        new_filter = {
+            "column": column,
+            "operator": request.params['operator'],
+            "value": request.params['value'].strip(),
+        }
+        
+        existing_filters.append(new_filter)
+        
+    elif action == "delete":
+        filter_id = int(request.params['filter'])
+        existing_filters = existing_filters[:filter_id] + existing_filters[filter_id+1:]
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
+    
+    the_query.jdata['filters'] = existing_filters
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#filters" % request.route_url("concision.query.filters", query_id=query_id))
+
 # def edit_column(request):
 #     request.do_not_log = True
 #     # the_user  = config['get_user_func'](request)
