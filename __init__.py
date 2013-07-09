@@ -161,6 +161,13 @@ def includeme(config):
     config.add_view(query.filters, route_name='concision.query.filters', renderer='templates/queries/filters.pt', permission='concision_edit')
     config.add_view(forms.filters, route_name='concision.query.do_filter', permission='concision_edit')
     
+    # Columns
+    config.add_route('concision.query.graphing', '/concision/query/graphing/{query_id}')
+    config.add_route('concision.query.do_key', '/concision/query/do_key/{query_id}')
+    
+    config.add_view(query.graphing, route_name='concision.query.graphing', renderer='templates/queries/graphing.pt', permission='concision_edit')
+    config.add_view(forms.do_key, route_name='concision.query.do_key', permission='concision_edit')
+    
     # Ajax
     config.add_route('concision.ajax.function_dropdown', '/concision/ajax/function_dropdown')
     config.add_view(form_ajax.function_dropdown, route_name='concision.ajax.function_dropdown', renderer='string', permission='concision_edit')

@@ -80,8 +80,6 @@ def column(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#columns" % request.route_url("concision.query.columns", query_id=query_id))
-    
-    # {"orderby": [], "group_by_funcs": {}, "filters": [], "tables": ["statline_outbound_qfup"], "group_by": false, "key": null, "joins": [], "columns": []}
 
 def filters(request):
     request.do_not_log = True
@@ -123,46 +121,26 @@ def filters(request):
     
     return HTTPFound(location="%s#filters" % request.route_url("concision.query.filters", query_id=query_id))
 
-# def edit_column(request):
-#     request.do_not_log = True
-#     # the_user  = config['get_user_func'](request)
+def do_key(request):
+    request.do_not_log = True
     
-#     query_id  = int(request.matchdict['query_id'])
-#     the_query = config['DBSession'].query(StoredQuery).column(StoredQuery.id == query_id).first()
-#     the_query.extract_data()
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
     
-#     new_column = {
-#         "column": request.params['column'],
-#         "operator": request.params['operator'],
-#         "value": request.params['value'],
-#     }
-#     column_id = int(request.params['column_id'])
+    new_key = " ".join(filter(None, (
+        # request.params['function0'],
+        # request.params['function1'],
+        # request.params['function2'],
+        request.params['key'],
+    )))
     
-#     existing_columns = the_query.jdata.get('columns', [])
-#     existing_columns[column_id] = new_column
-#     the_query.jdata['columns'] = existing_columns
-#     the_query.compress_data()
+    if new_key == "":
+        new_key = None
     
-#     config['DBSession'].add(the_query)
+    the_query.jdata['key'] = new_key
+    the_query.compress_data()
     
-#     return HTTPFound(location="%s#columns" % request.route_url("concision.query.edit", query_id=query_id))
-
-# def delete_column(request):
-#     request.do_not_log = True
-#     # the_user  = config['get_user_func'](request)
+    config['DBSession'].add(the_query)
     
-#     query_id  = int(request.matchdict['query_id'])
-#     the_query = config['DBSession'].query(StoredQuery).column(StoredQuery.id == query_id).first()
-#     the_query.extract_data()
-    
-#     column_id = int(request.params['f'])
-#     existing_columns = the_query.jdata.get('columns', [])
-    
-#     existing_columns = existing_columns[:column_id] + existing_columns[column_id+1:]
-    
-#     the_query.jdata['columns'] = existing_columns
-#     the_query.compress_data()
-    
-#     config['DBSession'].add(the_query)
-    
-#     return HTTPFound(location="%s#columns" % request.route_url("concision.query.edit", query_id=query_id))
+    return HTTPFound(location="%s#graphing" % request.route_url("concision.query.graphing", query_id=query_id))

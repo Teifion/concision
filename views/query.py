@@ -74,6 +74,7 @@ def overview(request):
         tables    = display.tables(data),
         columns   = display.columns(data),
         filters   = display.filters(data),
+        query_key = display.query_key(data),
         query_id  = query_id,
         
         tablist = tablist,
@@ -169,6 +170,35 @@ def filters(request):
         filters   = display.filters(data),
         
         seletable_filters = seletable_filters,
+        
+        html_f    = html_f,
+        consts    = consts,
+        query_id  = query_id,
+    )
+
+def graphing(request):
+    the_user = config['get_user_func'](request)
+    layout   = get_renderer(config['layout']).implementation()
+    
+    query_id = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    data = the_query.extract_data()
+    query_f.check_query_data(data)
+    
+    keyable_columns = []
+    for t in data['tables']:
+        the_source = config['sources'][t]
+        keyable_columns.extend([("%s.%s" % (t, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.keys])
+    
+    return dict(
+        title     = "Concision query",
+        layout    = layout,
+        the_user  = the_user,
+        the_query = the_query,
+        data      = data,
+        filters   = display.filters(data),
+        
+        keyable_columns = keyable_columns,
         
         html_f    = html_f,
         consts    = consts,

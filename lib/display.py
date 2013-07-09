@@ -39,6 +39,10 @@ def tablist(data):
         tablist.add('execute')
         tablist.add('groupby')
         tablist.add('orderby')
+        tablist.add('graphing')
+    
+    if data.get('key', None) is not None:
+        tablist.add('view_graph')
     
     return tablist
 
@@ -90,4 +94,21 @@ def filters(data):
         
         yield r
 
-
+def query_key(data):
+    if data['key'] == None:
+        return None
+    
+    funcs, table, column = converters.get_parts(data['key'])
+        
+    func_labels = map(
+        lambda k: consts.all_funcs[k],
+        funcs,
+    )
+    
+    source = config['sources'][table]
+    r = {
+        "name": "%s %s" % (" ".join(func_labels), source.column_labels[column]),
+        "table": source.label,
+    }
+    
+    return r

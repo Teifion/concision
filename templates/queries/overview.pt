@@ -35,6 +35,13 @@
             background-color: #FEE;
         }
         
+        .query_key
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FFE;
+        }
+        
         select {min-width: 100px;}
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
@@ -59,6 +66,7 @@
         </script>
         
         <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.view', query_id=query_id)}" tal:condition="'execute' in tablist">View results</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.graph', query_id=query_id)}" tal:condition="'view_graph' in tablist">Graph</a>
         <br /><br />
         
         <div id="tab_container">
@@ -153,6 +161,59 @@
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
+            
+            <div id="orderby" tal:condition="'orderby' in tablist">
+                <div class="tooltip_right">
+                    <div id="orderby_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    &nbsp;
+                    <br /><br />
+                    <br /><br />
+                    &nbsp;
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <div id="groupby" tal:condition="'groupby' in tablist">
+                <div class="tooltip_right">
+                    <div id="groupby_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    &nbsp;
+                    <br /><br />
+                    <br /><br />
+                    &nbsp;
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <div id="graphing" tal:condition="'graphing' in tablist">
+                <div class="tooltip_right">
+                    <div id="graphing_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <div class="query_key" tal:condition="query_key != None">
+                        ${query_key['table']}:
+                        &nbsp;&nbsp;&nbsp;
+                        
+                        ${query_key['name']}
+                    </div>
+                    
+                    <a href="${request.route_url('concision.query.graphing', query_id=query_id)}" class="inbutton">Edit graphing</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
             
             <!-- End of tabs -->
         </div>
