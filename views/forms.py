@@ -10,7 +10,7 @@ from ..models import (
 )
 
 # import json
-from ..lib import query_f
+from ..lib import query_f, filter_funcs
 from .. import config
 
 def table(request):
@@ -35,6 +35,17 @@ def table(request):
     
     elif action == "delete":
         table_id = int(request.params['table'])
+        table_name = existing_tables[table_id]
+        
+        membership_tester = lambda v: ("%s." % table_name) not in v
+        data['columns'] = list(filter(membership_tester, data['columns']))
+        
+        membership_tester = lambda v: ("%s." % table_name) not in v['column']
+        data['filters'] = list(filter(membership_tester, data['filters']))
+        
+        if ("%s." % table_name) in data['key']:
+            data['key'] = None
+        
         existing_tables = existing_tables[:table_id] + existing_tables[table_id+1:]
         
     else:
@@ -109,7 +120,7 @@ def filters(request):
         
     elif action == "delete":
         filter_id = int(request.params['filter'])
-        existing_filters = existing_filters[:filter_id] + existing_filters[filter_id+1:]
+        existing_filters = filter_funcs.delete_filter(existing_filters, filter_id)
         
     else:
         raise KeyError("No handler for action of '%s'" % action)
@@ -127,16 +138,24 @@ def do_key(request):
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
     the_query.extract_data()
+    action = request.params['action']
     
-    new_key = " ".join(filter(None, (
-        # request.params['function0'],
-        # request.params['function1'],
-        # request.params['function2'],
-        request.params['key'],
-    )))
-    
-    if new_key == "":
+    if action == "add":
+        new_key = " ".join(filter(None, (
+            request.params['function0'],
+            request.params['function1'],
+            request.params['function2'],
+            request.params['key'],
+        )))
+        
+        if new_key == "":
+            new_key = None
+        
+    elif action == "delete":
         new_key = None
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
     
     the_query.jdata['key'] = new_key
     the_query.compress_data()

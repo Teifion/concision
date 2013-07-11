@@ -108,7 +108,19 @@ def delete(request):
     the_user = config['get_user_func'](request)
     layout   = get_renderer(config['layout']).implementation()
     
+    query_id = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    
+    if the_query.creator != the_user.id:
+        return HTTPFound(location=request.route_url("concision.menu"))
+    
+    if 'form.submitted' in request.params:
+        config['DBSession'].delete(the_query)
+        return HTTPFound(location=request.route_url("concision.menu"))
+    
     return dict(
-        title      = "Concision query",
-        layout     = layout,
+        title     = "Delete query",
+        layout    = layout,
+        the_user  = the_user,
+        the_query = the_query,
     )

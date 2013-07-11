@@ -56,12 +56,10 @@
                 $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
                 $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
                 
-                /*
-                $('#keys_tooltip').load("${request.route_url('concision.tooltip', page='keys')}");
+                $('#graphing_tooltip').load("${request.route_url('concision.tooltip', page='graphing')}");
                 $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
                 $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
                 $('#join_tooltip').load("${request.route_url('concision.tooltip', page='join')}");
-                */
             });
         </script>
         
@@ -72,16 +70,16 @@
         <div id="tab_container">
             <ul>
                 <li><a href="#tables">Tables</a></li>
-                <li><a href="#columns" tal:condition="'columns' in tablist">Columns</a></li>
+                <li tal:condition="'columns' in tablist"><a href="#columns">Columns</a></li>
                 
-                <li><a href="#filters" tal:condition="'filters' in tablist">Filters</a></li>
-                <li><a href="#orderby" tal:condition="'orderby' in tablist">Ordering</a></li>
-                <li><a href="#groupby" tal:condition="'groupby' in tablist">Grouping</a></li>
+                <li tal:condition="'filters' in tablist"><a href="#filters">Filters</a></li>
+                <li tal:condition="'orderby' in tablist"><a href="#orderby">Ordering</a></li>
+                <li tal:condition="'groupby' in tablist"><a href="#groupby">Grouping</a></li>
                 
-                <li><a href="#graphing" tal:condition="'graphing' in tablist">Graphing</a></li>
-                <li><a href="#join" tal:condition="'joins' in tablist">Join</a></li>
+                <li tal:condition="'graphing' in tablist"><a href="#graphing">Graphing</a></li>
+                <!-- <li tal:condition="'joins' in tablist"><a href="#join">Join</a></li>  -->
                 
-                <li><a href="#execute" tal:condition="'execute' in tablist">Execute</a></li>
+                <li tal:condition="'execute' in tablist"><a href="#execute">Execute</a></li>
                 <li><a href="#other">Other</a></li>
             </ul>
             
@@ -170,10 +168,9 @@
                 </div>
                 
                 <div class="main_content">
-                    &nbsp;
+                    This section is still under construction.
                     <br /><br />
                     <br /><br />
-                    &nbsp;
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -186,10 +183,9 @@
                 </div>
                 
                 <div class="main_content">
-                    &nbsp;
+                    This section is still under construction.
                     <br /><br />
                     <br /><br />
-                    &nbsp;
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -202,7 +198,9 @@
                 </div>
                 
                 <div class="main_content">
-                    <div class="query_key" tal:condition="query_key != None">
+                    <div tal:condition="data['key'] != None" class="query_key">
+                        <a href="${request.route_url('concision.query.do_key', query_id=query_id)}?action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
                         ${query_key['table']}:
                         &nbsp;&nbsp;&nbsp;
                         
@@ -210,6 +208,36 @@
                     </div>
                     
                     <a href="${request.route_url('concision.query.graphing', query_id=query_id)}" class="inbutton">Edit graphing</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <div id="execute" tal:condition="'execute' in tablist">
+                <div class="tooltip_right">
+                    <div id="execute_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    This section is still under construction.
+                    <br /><br />
+                    <br /><br />
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <div id="other">
+                <div class="tooltip_right">
+                    <div id="other_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <a href="${request.route_url('concision.query.delete', query_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
+                    <br /><br />
+                    <br /><br />
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>

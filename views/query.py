@@ -13,6 +13,7 @@ from ..lib import (
     html_f,
     consts,
     query_f,
+    converters,
     # graphing,
     # pretty_sql,
     # joins,
@@ -161,13 +162,16 @@ def filters(request):
         the_source = config['sources'][t]
         seletable_filters.extend([("%s.%s" % (t, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.columns])
     
+    filter_html = display.filter_html(data['filters']).replace("[query_id]", str(query_id))
+    
     return dict(
         title     = "Concision query",
         layout    = layout,
         the_user  = the_user,
         the_query = the_query,
         data      = data,
-        filters   = display.filters(data),
+        # filters   = display.filters(data),
+        filter_html = filter_html,
         
         seletable_filters = seletable_filters,
         
@@ -190,6 +194,12 @@ def graphing(request):
         the_source = config['sources'][t]
         keyable_columns.extend([("%s.%s" % (t, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.keys])
     
+    selected_key = None
+    if data['key'] != None:
+        f, t, c = converters.get_parts(data['key'])
+        selected_key = "{}.{}".format(t, c)
+        funcs = f
+    
     return dict(
         title     = "Concision query",
         layout    = layout,
@@ -199,6 +209,7 @@ def graphing(request):
         filters   = display.filters(data),
         
         keyable_columns = keyable_columns,
+        selected_key = selected_key,
         
         html_f    = html_f,
         consts    = consts,

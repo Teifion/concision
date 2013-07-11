@@ -1,4 +1,4 @@
-from sqlalchemy import func
+from sqlalchemy import func, and_, or_
 from collections import defaultdict
 from functools import partial
 
@@ -71,4 +71,14 @@ group_lookup = function_lookup
 orderby = {
     "ASC": "Ascending (0 to 9, A to Z)",
     "DESC": "Descending (9 to 0, Z to A)",
+}
+
+filter_types = {
+    "and": "All",
+    "or": "Any",
+}
+
+filter_lookup = {
+    "and": and_,
+    "or": or_,
 }

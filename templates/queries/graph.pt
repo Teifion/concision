@@ -35,10 +35,12 @@
                         type: "line",
                     },
                     title: {
-                        text: "Graph title",
+                        // text: "Graph title",
+                        text: ""
                     },
                     subtitle: {
-                        text: 'Click and drag in the plot area to zoom in'
+                        // text: 'Click and drag in the plot area to zoom in'
+                        text: ''
                     },
                     xAxis: {
                         type: 'datetime',

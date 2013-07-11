@@ -193,14 +193,14 @@ def build(data):
         q.joins.append(the_join)
     
     # For debug
-    print("\n\n")
-    print(q.columns)
-    print(q.filters)
-    print(q.order_bys)
-    print(q.group_bys)
-    print(q.joins)
-    print(q.alias_joins)
-    print("\n\n")
+    # print("\n\n")
+    # print(q.columns)
+    # print(q.filters)
+    # print(q.order_bys)
+    # print(q.group_bys)
+    # print(q.joins)
+    # print(q.alias_joins)
+    # print("\n\n")
     
     # Add all calculated joins and all filter/alias related ones too
     for j in q.joins:

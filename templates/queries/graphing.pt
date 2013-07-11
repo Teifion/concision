@@ -46,14 +46,32 @@
         
         <div class="main_content">
             <h3>Query key</h3>
-            <form action="${request.route_url('concision.query.do_key', query_id=query_id)}" method="post" accept-charset="utf-8">
+            <form action="${request.route_url('concision.query.do_key', query_id=query_id)}" method="post" accept-charset="utf-8" tal:condition="data['key'] == None">
                 <input type="hidden" name="action" id="action" value="add" />
                 
                 <table border="0" cellspacing="0" cellpadding="5">
                     <tr>
                         <td><label for="key">Key:</label></td>
                         <td>
-                            ${structure:html_f.option_box("key", keyable_columns, insert_dud="No key", selected=data['key'])}
+                            ${structure:html_f.option_box("key", keyable_columns, insert_dud="No key")}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="function">Function 1:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td><label for="function">Function 2:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
+                        </td>
+                    </tr>
+                    <tr style="display:none;">
+                        <td><label for="function">Function 3:</label></td>
+                        <td>
+                            ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
                         </td>
                     </tr>
                     <tr>

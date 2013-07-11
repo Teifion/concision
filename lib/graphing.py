@@ -25,9 +25,6 @@ def convert(results, c_query, table_headers):
     first_key = None
     for ri, r in enumerate(results):
         if first_key == None:
-            print("\n\n")
-            print(r)
-            print("\n\n")
             first_key = r[-1]
         
         for i, c in enumerate(r[:-1]):
@@ -42,11 +39,6 @@ def convert(results, c_query, table_headers):
     
     json_series = json.dumps(series, default=exporter.json_export)
     json_series = exporter.graph_convert(json_series)
-    
-    # print("\n\n")
-    # print(json_series)
-    # print(first_key)
-    # print("\n\n")
     
     data = {
         "start_date": "Date.UTC({0.year}, {0.month}, {0.day})".format(first_key),
