@@ -121,13 +121,13 @@
             function new_item (f)
             {
                 $("#group_" + f).append($("#new_item_form").html());
-                $("#group_" + f + " > form > input").val(f);
+                $("#group_" + f + " > form > input:first").val(f);
             }
             
             function new_group (f)
             {
                 $("#group_" + f).append($("#new_group_form").html());
-                $("#group_" + f + " > form > input").val(f);
+                $("#group_" + f + " > form > input:first").val(f);
             }
         </script>
         

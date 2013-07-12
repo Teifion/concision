@@ -21,6 +21,33 @@ example_filters = {
     }]
 }
 
+def get_max_id(data, current_max=1):
+    for item in data['contents']:
+        if 'type' in item:
+            current_max = max(get_max_id(item, current_max), current_max)
+        else:
+            current_max = max(item['id'], current_max)
+    
+    return current_max
+
+def add_item(data, filter_id, new_item):
+    new_data = dict(data)
+    
+    contents = []
+    # if filter_id == data['id']:
+    #     contents.append(new_item)
+    for item in data['contents']:
+        if 'type' in item:
+            contents.append(add_item(item, filter_id, new_item))
+        else:
+            contents.append(item)
+    
+    if data['id'] == filter_id:
+        contents.append(new_item)
+    
+    new_data['contents'] = contents
+    return new_data
+
 def delete_filter(data, filter_id):
     new_data = dict(data)
     # prelude = lambda d: d['id'] != filter_id
@@ -35,10 +62,6 @@ def delete_filter(data, filter_id):
     
     new_data['contents'] = contents
     return new_data
-
-# print(example_filters)
-# print("\n\n")
-# print(delete_filter(example_filters,2))
 
 group_template = """
 """

@@ -102,22 +102,34 @@ def filters(request):
     action = request.params['action']
     existing_filters = the_query.jdata.get('filters', [])
     
-    if action == "add":
+    if action == "add_item":
         column = " ".join(filter(None, (
             request.params['function0'],
             request.params['function1'],
             request.params['function2'],
-            request.params['filter'],
+            request.params['column'],
         )))
         
-        new_filter = {
+        max_id = filter_funcs.get_max_id(existing_filters) + 1
+        new_item = {
             "column": column,
             "operator": request.params['operator'],
             "value": request.params['value'].strip(),
+            "id": max_id,
         }
         
-        existing_filters.append(new_filter)
+        existing_filters = filter_funcs.add_item(existing_filters, int(request.params['item_id']), new_item)
+    
+    elif action == "add_group":
+        max_id = filter_funcs.get_max_id(existing_filters) + 1
+        new_item = {
+            "type": request.params['type'],
+            "contents": [],
+            "id": max_id,
+        }
         
+        existing_filters = filter_funcs.add_item(existing_filters, int(request.params['item_id']), new_item)
+    
     elif action == "delete":
         filter_id = int(request.params['filter'])
         existing_filters = filter_funcs.delete_filter(existing_filters, filter_id)

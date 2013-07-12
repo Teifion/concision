@@ -26,7 +26,7 @@ from . import converters, consts, filter_funcs
     # Joins
     current_source_joins = joins.current_source_joins(data)
     possible_source_joins = joins.possible_source_joins(data)
-    """
+"""
 
 def tablist(data):
     tablist = set(["tables"])
