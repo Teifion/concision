@@ -43,6 +43,30 @@
         }
         
         select {min-width: 100px;}
+        
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
+        .filter_group, .filter_item
+        {
+            border: 1px solid #BBB;
+            margin: 10px 5px 10px 20px;
+            padding: 5px 5px;
+        }
+        
+        .filter_group {border: 1px solid #BBB;}
+        .group_type {font-weight: bold;}
+        .filter_item {border: 1px solid #CCC;}
+        .filter_item:hover {border: 1px solid #AAA;}
+        
+        .del_link {display:none;}
+        .add_link {display:none;}
+        .add_group_link {display:none;}
+        
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
         <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
@@ -133,26 +157,8 @@
                 </div>
                 
                 <div class="main_content">
-                    <div tal:repeat="f filters" class="query_filter">
-                        <a href="${request.route_url('concision.query.do_filter', query_id=query_id)}?filter=${f['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
-                        
-                        ${f['table']}
-                        
-                        &nbsp;&nbsp;
-                        
-                        ${f['name']}
-                        
-                        &nbsp;&nbsp;
-                        &#8594;
-                        &nbsp;&nbsp;
-                        
-                        ${f['operator']}
-                        
-                        &nbsp;&nbsp;
-                        &#8594;
-                        &nbsp;&nbsp;
-                        
-                        "${f['value']}"
+                    <div style="margin-left:-10px;">
+                        ${structure:filter_html}
                     </div>
                     
                     <a href="${request.route_url('concision.query.filters', query_id=query_id)}" class="inbutton">Edit filters</a>

@@ -14,6 +14,7 @@ from ..lib import (
     consts,
     query_f,
     converters,
+    filter_funcs,
     # graphing,
     # pretty_sql,
     # joins,
@@ -66,17 +67,19 @@ def overview(request):
     
     tablist = display.tablist(data)
     
+    filter_html = display.filter_html(data['filters']).replace("[query_id]", str(query_id))
+    
     return dict(
-        title     = "Concision query",
-        layout    = layout,
-        the_user  = the_user,
-        the_query = the_query,
-        data      = data,
-        tables    = display.tables(data),
-        columns   = display.columns(data),
-        filters   = display.filters(data),
-        query_key = display.query_key(data),
-        query_id  = query_id,
+        title       = "Concision query",
+        layout      = layout,
+        the_user    = the_user,
+        the_query   = the_query,
+        data        = data,
+        tables      = display.tables(data),
+        columns     = display.columns(data),
+        filter_html = filter_html,
+        query_key   = display.query_key(data),
+        query_id    = query_id,
         
         tablist = tablist,
         # sources   = config['sources'],

@@ -30,6 +30,17 @@ def get_max_id(data, current_max=1):
     
     return current_max
 
+def get_columns(data):
+    columns = []
+    
+    for item in data['contents']:
+        if 'type' in item:
+            columns.extend(get_columns(item))
+        else:
+            columns.append(item['column'])
+    
+    return columns
+
 def add_item(data, filter_id, new_item):
     new_data = dict(data)
     
@@ -126,3 +137,48 @@ def _filter_item(data):
     
     results.append("</div>")
     return "".join(results)
+
+def build(the_query, data):
+    f = consts.filter_lookup[data['type']]
+    
+    parts = []
+    for item in data['contents']:
+        if 'type' in item:
+            parts.append(build(the_query, item))
+        else:
+            parts.append(build_compare(the_query, item))
+    
+    return f(*parts)
+
+def build_compare(the_query, item):
+    filter_col = the_query.get(item['column'], pure=True)
+    op_func = getattr(filter_col, consts.operator_lookup[item['operator']])
+    
+    funcs, t, c = converters.get_parts(item['column'])
+    source_table = config['sources'][t]
+    # config['sources'][table]
+    # if column in table_source.aliases:
+    
+    value = item['value']
+    
+    # Enum?
+    if c in source_table.enums:
+        if value in source_table.enums[c]:
+            value = source_table.enums[c].index(value)
+        else:
+            raise Exception("")
+    
+    # Convert it from a string into the relevant database type
+    value = converters.typecast(the_query.get(item['column'], use_alias=False, pure=True), value)
+    
+    # Apply conversion functions to it
+    value = converters.convert(value, source_table.column_converters.get(c, []))
+    
+    # Apply filter type converts to it
+    value = consts.operator_converters[item['operator']](value)
+    
+    return op_func(value)
+
+# print("\n\n")
+# print(build(example_filters))
+# print("\n\n")

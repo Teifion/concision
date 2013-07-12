@@ -1,6 +1,6 @@
 from .. import config
 from sqlalchemy.orm import aliased
-from . import converters, consts
+from . import converters, consts, filter_funcs
 
 class CQuery(object):
     """An object for storing the query being built."""
@@ -24,7 +24,7 @@ class CQuery(object):
         are in the alias list. Any it finds it adds aliases for and
         extends the filters so the alias will be linked to.
         """
-        total_columns = data['columns'] + [data['key']] + [f['column'] for f in data['filters']]
+        total_columns = data['columns'] + [data['key']] + filter_funcs.get_columns(data['filters'])
         
         for table_column in filter(None, total_columns):
             f, t, c = converters.get_parts(table_column)
@@ -114,6 +114,7 @@ def build(data):
         q.columns.append(q.get(data['key']))
     
     # Filters
+    """
     for f in data['filters']:
         filter_col = q.get(f['column'], pure=True)
         op_func = getattr(filter_col, consts.operator_lookup[f['operator']])
@@ -142,6 +143,9 @@ def build(data):
         value = consts.operator_converters[f['operator']](value)
         
         q.filters.append(op_func(value))
+    """
+    
+    q.filters = [filter_funcs.build(q, data['filters'])]
     
     for aj in q.alias_joins:
         q.filters.append(aj)
@@ -214,7 +218,7 @@ def check_query_data(data):
     data['key']            = data.get('key', None)
     data['tables']         = data.get('tables', [])
     data['columns']        = data.get('columns', [])
-    data['filters']        = data.get('filters', [])
+    data['filters']        = data.get('filters', {"type":"and","id":1,"contents":[]})
     data['group_by']       = data.get('group_by', False)
     data['group_by_funcs'] = data.get('group_by_funcs', {})
     data['orderby']        = data.get('orderby', [])
