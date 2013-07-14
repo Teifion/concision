@@ -256,3 +256,20 @@ def do_key(request):
     config['DBSession'].add(the_query)
     
     return HTTPFound(location="%s#graphing" % request.route_url("concision.query.overview", query_id=query_id))
+
+def other(request):
+    request.do_not_log = True
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    action = request.params['action']
+    
+    if action == "edit":
+        the_query.name = request.params['query_name'].strip()
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#other" % request.route_url("concision.query.overview", query_id=query_id))

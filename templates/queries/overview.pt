@@ -574,8 +574,23 @@
                 </div>
                 
                 <div class="main_content">
-                    <a href="${request.route_url('concision.query.delete', query_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
+                    <form action="${request.route_url('concision.query.do_other', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                        <input type="hidden" name="action" id="action" value="edit" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="query_name">Query name:</label></td>
+                                <td style="padding:2px;"><input type="text" name="query_name" id="query_name" value="${the_query.name}" /></td>
+                            </tr>
+                        </table>
+                        
+                        <input type="submit" value="Submit" name="form.submitted" class="inbutton" />
+                    </form>
+                    
                     <br /><br />
+                    <hr />
+                    <br /><br />
+                    <a href="${request.route_url('concision.query.delete', query_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
                     <br /><br />
                 </div>
                 <div style="clear:both;">&nbsp;</div>

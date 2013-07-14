@@ -18,7 +18,6 @@ CREATE TABLE concision_reports (
     "id" SERIAL NOT NULL,
     "name" VARCHAR NOT NULL,
     
-    queries INTEGER[] NOT NULL,
     data TEXT NOT NULL,
     "creator" INTEGER NOT NULL,
     

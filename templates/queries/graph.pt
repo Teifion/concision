@@ -86,10 +86,6 @@
         </script>
         
         <div tal:condition="graph_data != {}">
-            <a href="${request.route_url('concision.query.view', query_id=query_id)}" class="inbutton" style="float:right">Table view</a>
-            
-            <a href="${request.route_url('concision.query.overview', query_id=query_id)}" class="inbutton">Edit</a>
-            <br /><br />
             <div id="container" style="width: 100%; height: 400px"></div>
         </div>
     </div>

@@ -33,6 +33,8 @@ def example_config_constructor(config):
     concision.add_source(example_sources.stat_table)
 
 def includeme(config):
+    report_views(config)
+    
     from .views import query as query
     from .views import forms as forms
     from .views import documentation as docs
@@ -43,76 +45,7 @@ def includeme(config):
     # Standard views
     config.add_route('concision.menu', '/concision/menu')
     config.add_route('concision.preferences', '/concision/preferences')
-    config.add_route('concision.list_queries', '/concision/list/queries')
-    
-    """OLD QUERY STUFF
-    # Query edit/viewing
-    config.add_route('concision.query.source', '/concision/query/source/{query_id}')
-    config.add_route('concision.query.edit_columns', '/concision/query/edit_columns/{query_id}')
-    config.add_route('concision.query.edit_groupby', '/concision/query/edit_groupby/{query_id}')
-    
-    config.add_route('concision.query.add_filter', '/concision/query/add_filter/{query_id}')
-    config.add_route('concision.query.edit_filter', '/concision/query/edit_filter/{query_id}')
-    config.add_route('concision.query.delete_filter', '/concision/query/delete_filter/{query_id}')
-    
-    config.add_route('concision.query.add_orderby', '/concision/query/add_orderby/{query_id}')
-    config.add_route('concision.query.edit_orderby', '/concision/query/edit_orderby/{query_id}')
-    config.add_route('concision.query.delete_orderby', '/concision/query/delete_orderby/{query_id}')
-    
-    config.add_route('concision.query.add_join', '/concision/query/add_join/{query_id}')
-    config.add_route('concision.query.delete_join', '/concision/query/delete_join/{query_id}')
-    
-    config.add_route('concision.query.edit_key', '/concision/query/edit_key/{query_id}')
-    config.add_route('concision.query.alter_query_type', '/concision/query/alter_query_type/{query_id}')
-    
-    # Now add the views
-    config.add_view(views.source, route_name='concision.query.source',
-        renderer='templates/queries/source.pt', permission='concision_edit')
-    
-    config.add_view(views.edit_columns, route_name='concision.query.edit_columns', permission='concision_edit')
-    config.add_view(views.edit_groupby, route_name='concision.query.edit_groupby', permission='concision_edit')
-    
-    config.add_view(views.edit_key, route_name='concision.query.edit_key', permission='concision_edit')
-    
-    config.add_view(views.add_filter, route_name='concision.query.add_filter', permission='concision_edit')
-    config.add_view(views.edit_filter, route_name='concision.query.edit_filter', permission='concision_edit')
-    config.add_view(views.delete_filter, route_name='concision.query.delete_filter', permission='concision_edit')
-    
-    config.add_view(views.add_orderby, route_name='concision.query.add_orderby', permission='concision_edit')
-    config.add_view(views.edit_orderby, route_name='concision.query.edit_orderby', permission='concision_edit')
-    config.add_view(views.delete_orderby, route_name='concision.query.delete_orderby', permission='concision_edit')
-    
-    config.add_view(views.add_join, route_name='concision.query.add_join', permission='concision_edit')
-    config.add_view(views.delete_join, route_name='concision.query.delete_join', permission='concision_edit')
-    
-    config.add_view(views.alter_query_type, route_name='concision.query.alter_query_type', permission='concision_edit')
-    
-    # Main query actions
-    config.add_route('concision.query.new', '/concision/query/new')
-    config.add_route('concision.query.add_new', '/concision/query/add_new')
-    config.add_route('concision.query.edit', '/concision/query/edit/{query_id}')
-    config.add_route('concision.query.delete', '/concision/query/delete/{query_id}')
-    config.add_route('concision.query.view', '/concision/query/view/{query_id}')
-    config.add_route('concision.query.graph', '/concision/query/graph/{query_id}')
-    config.add_route('concision.query.export', '/concision/query/export/{query_id}')
-    config.add_route('concision.query.raw', '/concision/query/raw/{query_id}')
-    
-    config.add_view(views.new_query, route_name='concision.query.new',
-        renderer='templates/queries/new.pt', permission='concision_edit')
-    config.add_view(views.add_new_query, route_name='concision.query.add_new',
-        renderer='templates/queries/new.pt', permission='concision_edit')
-    config.add_view(views.edit_query, route_name='concision.query.edit',
-        renderer='templates/queries/edit.pt', permission='concision_edit')
-    config.add_view(views.view_query, route_name='concision.query.view',
-        renderer='templates/queries/view.pt', permission='concision')
-    config.add_view(views.graph_query, route_name='concision.query.graph',
-        renderer='templates/queries/graph.pt', permission='concision')
-    config.add_view(views.export_query, route_name='concision.query.export', permission='concision')
-    config.add_view(views.raw_query, route_name='concision.query.raw',
-        renderer='templates/queries/raw.pt', permission='concision')
-    config.add_view(views.delete_query, route_name='concision.query.delete',
-        renderer='templates/queries/delete.pt', permission='concision_edit')
-    """
+    config.add_route('concision.list_queries', '/concision/queries/list')
     
     config.add_view(general.menu, route_name='concision.menu',
         renderer='templates/general/menu.pt', permission='concision')
@@ -182,6 +115,11 @@ def includeme(config):
     config.add_view(query.graphing, route_name='concision.query.graphing', renderer='templates/queries/graphing.pt', permission='concision_edit')
     config.add_view(forms.do_key, route_name='concision.query.do_key', permission='concision_edit')
     
+    # Other
+    config.add_route('concision.query.do_other', '/concision/query/do_other/{query_id}')
+    
+    config.add_view(forms.other, route_name='concision.query.do_other', permission='concision_edit')
+    
     # Ajax
     config.add_route('concision.ajax.function_dropdown', '/concision/ajax/function_dropdown')
     config.add_view(form_ajax.function_dropdown, route_name='concision.ajax.function_dropdown', renderer='string', permission='concision_edit')
@@ -197,3 +135,19 @@ def includeme(config):
     config.add_view(docs.tooltip, route_name='concision.tooltip', renderer='string', http_cache=3600)
     
     return config
+
+def report_views(config):
+    from .views import report as report
+    
+    # Standard views
+    config.add_route('concision.report.list', '/concision/report/list')
+    config.add_route('concision.report.new', '/concision/report/new')
+    config.add_route('concision.report.add_new', '/concision/report/add_new')
+    config.add_route('concision.report.overview', '/concision/report/overview/{report_id}')
+    
+    config.add_view(report.list_reports, route_name='concision.report.list',
+        renderer='templates/report/list.pt', permission='concision')
+    config.add_view(report.new, route_name='concision.report.new',
+        renderer='templates/report/new.pt', permission='concision')
+    config.add_view(report.new, route_name='concision.report.add_new', renderer='templates/queries/new.pt', permission='concision_edit')
+    config.add_view(report.overview, route_name='concision.report.overview', renderer='templates/queries/overview.pt', permission='concision_edit')

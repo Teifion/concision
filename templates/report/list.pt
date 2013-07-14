@@ -1,0 +1,27 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    
+    <div metal:fill-slot="content" style="padding:0px;">
+        <a href="${request.route_url('concision.report.new')}" class="inbutton">New report</a>
+        <br /><br />
+        <table cellspacing="0" cellpadding="5" style="width:100%;">
+            <tr class="row2">
+                <th>Name</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr tal:repeat="the_report report_list" tal:attributes="class 'row%s' % (repeat.the_report.index%2)">
+                <td>${the_report.name}</td>
+                <td class="button_cell">
+                    <a href="${request.route_url('concision.report.overview', report_id=the_report.id)}" class="inbutton">View</a>
+                </td>
+            </tr>
+        </table>
+        <br />
+    </div>
+</div>

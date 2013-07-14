@@ -92,4 +92,4 @@ class ConcisionReport(DeclarativeBase):
     id       = Column(Integer, primary_key=True)
     name     = Column(String, nullable=False)
     creator  = Column(Integer, ForeignKey("users.id"), nullable=False)
-    queries  = Column(ARRAY(Integer), nullable=False)
+    data     = Column(Text, nullable=False)

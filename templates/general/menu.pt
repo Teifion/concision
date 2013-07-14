@@ -18,5 +18,10 @@
         <a href="${request.route_url('concision.list_queries')}" class="inbutton">Existing queries</a>
         <br /><br /><br />
         
+        <h2>Reports</h2>
+        <a href="${request.route_url('concision.report.new')}" class="inbutton">New report</a>
+        <a href="${request.route_url('concision.report.list')}" class="inbutton">Existing reports</a>
+        <br /><br /><br />
+        
     </div>
 </div>
