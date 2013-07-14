@@ -20,8 +20,8 @@
         
         
         <h2>Reports (Coming soon!)</h2>
-        <a hhref="${request.route_url('concision.report.new')}" class="inbutton">New report</a>
-        <a hhref="${request.route_url('concision.report.list')}" class="inbutton">Existing reports</a>
+        <!-- <a href="${request.route_url('concision.report.new')}" class="inbutton">New report</a> -->
+        <!-- <a href="${request.route_url('concision.report.list')}" class="inbutton">Existing reports</a> -->
         <br /><br /><br />
         
     </div>
