@@ -13,11 +13,11 @@
             });
         </script>
         
-        <!-- <a href="${request.route_url('concision.query.export', query_id=query_id)}" class="inbutton" style="float:right">Export</a> -->
-        <!-- <a href="${request.route_url('concision.query.raw', query_id=query_id)}" class="inbutton" style="float:right">Raw</a> -->
-        <!-- <a href="${request.route_url('concision.query.graph', query_id=query_id)}" class="inbutton" style="float:right" tal:condition="data['key'] != None">Graph</a> -->
+        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}">Query overview</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.raw', query_id=query_id)}" tal:condition="'execute' in tablist">View raw query</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.export', query_id=query_id)}" tal:condition="'execute' in tablist">Export</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.graph', query_id=query_id)}" tal:condition="'view_graph' in tablist">Graph</a>
         
-        <a href="${request.route_url('concision.query.overview', query_id=query_id)}" class="inbutton">Query overview</a>
         <br /><br />
         
         <table border="0" cellspacing="0" cellpadding="5">

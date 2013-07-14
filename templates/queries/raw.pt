@@ -1,0 +1,24 @@
+<div metal:use-macro="layout">
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        <a class="inbutton" href="${request.route_url('concision.query.overview', query_id=query_id)}">Query overview</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.view', query_id=query_id)}" tal:condition="'execute' in tablist">View results</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.export', query_id=query_id)}" tal:condition="'execute' in tablist">Export</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.graph', query_id=query_id)}" tal:condition="'view_graph' in tablist">Graph</a>
+        <br /><br />
+        
+        This page displays information about the query being run. If you're not a developer it's probably not of interest to you (but feel free to look at it anyway).
+        <br /><br />
+        
+        <h3>Raw query</h3>
+        <pre>${structure:the_query}</pre>
+        
+        <br /><br />
+        
+        <h3>Output of Explain Analyze</h3>
+        <pre>${structure:explain}</pre>
+    </div>
+</div>

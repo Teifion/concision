@@ -92,6 +92,7 @@ def overview(request):
         tables      = list(display.tables(data)),
         columns     = list(display.columns(data)),
         filter_html = filter_html,
+        orderbys    = list(display.orderbys(data)),
         query_key   = display.query_key(data),
         query_id    = query_id,
         
@@ -191,6 +192,9 @@ def filters(request):
         consts    = consts,
         query_id  = query_id,
     )
+
+def orderby(request):
+    pass
 
 def groupby(request):
     pass

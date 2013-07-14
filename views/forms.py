@@ -149,20 +149,72 @@ def filters(request):
     
     return HTTPFound(location="%s#filters" % request.route_url("concision.query.overview", query_id=query_id))
 
+def orderby(request):
+    request.do_not_log = True
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    the_query.extract_data()
+    
+    action = request.params['action']
+    existing_orderbys = the_query.jdata.get('orderby', [])
+    
+    if action == "add":
+        new_orderby = {
+            "order": request.params['order'],
+            "column": " ".join(filter(None, (
+                request.params['function0'],
+                request.params['function1'],
+                request.params['function2'],
+                request.params['column'],
+            )))
+        }
+        
+        existing_orderbys.append(new_orderby)
+        
+    elif action == "delete":
+        order_id = int(request.params['order'])
+        
+        existing_orderbys = existing_orderbys[:order_id] + existing_orderbys[order_id+1:]
+        
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
+    
+    the_query.jdata['orderby'] = existing_orderbys
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#orderby" % request.route_url("concision.query.overview", query_id=query_id))
+
 def groupby(request):
     request.do_not_log = True
+    action = request.params.get('action', 'add')
     
     query_id  = int(request.matchdict['query_id'])
     the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
     data = the_query.extract_data()
     
-    groupbys = []
+    if action == "add":
+        groupbys = []
+        
+        if 'key' in request.params:
+            the_query.jdata['groupby_key'] = request.params['key']
+        
+        for i, c in enumerate(data['columns']):
+            groupbys.append(request.params[str(i)])
+            
+    elif action == "delete":
+        groupbys = []
+        
+        if 'key' in request.params:
+            the_query.jdata['groupby_key'] = "-"
+        
+        for i, c in enumerate(data['columns']):
+            groupbys.append("-")
     
-    if 'key' in request.params:
-        the_query.jdata['groupby_key'] = request.params['key']
-    
-    for i, c in enumerate(data['columns']):
-        groupbys.append(request.params[str(i)])
+    else:
+        raise KeyError("No handler for action of '%s'" % action)
     
     the_query.jdata['groupby'] = groupbys
     the_query.compress_data()

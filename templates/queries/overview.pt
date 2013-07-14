@@ -35,6 +35,13 @@
             background-color: #FEE;
         }
         
+        .query_orderby
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EFF;
+        }
+        
         .query_groupby
         {
             padding: 10px;
@@ -170,16 +177,18 @@
         </script>
         
         <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.view', query_id=query_id)}" tal:condition="'execute' in tablist">View results</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.raw', query_id=query_id)}" tal:condition="'execute' in tablist">View raw query</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.raw', query_id=query_id)}" tal:condition="'execute' in tablist">Export</a>
         <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.graph', query_id=query_id)}" tal:condition="'view_graph' in tablist">Graph</a>
-        <br /><br />
+        <br /><br /><br /><br />
         
-        <div id="tab_container">
+        <div id="tab_container" style="clear:right">
             <ul>
                 <li><a href="#tables">Tables</a></li>
                 <li tal:condition="'columns' in tablist"><a href="#columns">Columns</a></li>
                 
                 <li tal:condition="'filters' in tablist"><a href="#filters">Filters</a></li>
-                <li tal:condition="'orderby' in tablist"><a href="#orderby">Ordering</a></li>
+                <li tal:condition="'orderby' in tablist"><a href="#orderby">Sorting</a></li>
                 <li tal:condition="'groupby' in tablist"><a href="#groupby">Grouping</a></li>
                 
                 <li tal:condition="'graphing' in tablist"><a href="#graphing">Graphing</a></li>
@@ -300,19 +309,19 @@
                                 </td>
                             </tr>
                             <tr style="display:none;">
-                                <td><label for="function">Function 1:</label></td>
+                                <td><label for="function0">Function 1:</label></td>
                                 <td>
                                     ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
                                 </td>
                             </tr>
                             <tr style="display:none;">
-                                <td><label for="function">Function 2:</label></td>
+                                <td><label for="function1">Function 2:</label></td>
                                 <td>
                                     ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
                                 </td>
                             </tr>
                             <tr style="display:none;">
-                                <td><label for="function">Function 3:</label></td>
+                                <td><label for="function2">Function 3:</label></td>
                                 <td>
                                     ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
                                 </td>
@@ -393,7 +402,62 @@
                 </div>
                 
                 <div class="main_content">
-                    &nbsp;
+                    <h3>Current sortings</h3>
+                    <div tal:condition="orderbys == []">
+                        You currently have no sortings in this query.
+                    </div>
+                    <div tal:repeat="c orderbys" class="query_orderby">
+                        <a href="${request.route_url('concision.query.do_orderby', query_id=query_id)}?order=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
+                        ${c['table']}:
+                        &nbsp;&nbsp;&nbsp;
+                        
+                        ${c['name']}
+                    </div>
+                    
+                    <br /><br />
+                    <h3>New sorting</h3>
+                    <form action="${request.route_url('concision.query.do_orderby', query_id=query_id)}" method="post" accept-charset="utf-8">
+                        <input type="hidden" name="action" id="action" value="add" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="column">Field:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("column", seletable_columns)}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="function0">Function 1:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function1">Function 2:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function2">Function 3:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="order">Sort direction:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("order", consts.orderby)}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="submit" value="Add" name="form.submitted" class="inbutton" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -459,6 +523,7 @@
                         
                         <div style="clear:left;">&nbsp;</div>
                         <input type="submit" value="Save grouping changes" name="form.submitted" class="inbutton"/>
+                        <a href="${request.route_url('concision.query.do_groupby', query_id=the_query.id)}?action=delete" class="inbutton red_button">Delete existing groupings</a>
                     </form>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
