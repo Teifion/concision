@@ -93,3 +93,14 @@ class ConcisionReport(DeclarativeBase):
     name     = Column(String, nullable=False)
     creator  = Column(Integer, ForeignKey("users.id"), nullable=False)
     data     = Column(Text, nullable=False)
+    
+    def extract_data(self):
+        self.jdata = json.loads(self.data)
+        return self.jdata
+    
+    def compress_data(self, d=None):
+        if d == None:
+            self.data = json.dumps(self.jdata)
+        else:
+            self.data = json.dumps(d)
+        return self.data

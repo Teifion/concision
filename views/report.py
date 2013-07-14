@@ -19,7 +19,7 @@ from ..lib import (
     # graphing,
     # pretty_sql,
     # joins,
-    display,
+    report_display,
 )
 from .. import config
 
@@ -62,10 +62,10 @@ def overview(request):
     
     report_id = int(request.matchdict['report_id'])
     the_report = config['DBSession'].query(ConcisionReport).filter(ConcisionReport.id == report_id).first()
-    # data = the_report.extract_data()
-    # query_f.check_query_data(data)
+    data = the_report.extract_data()
+    report_f.check_report_data(data)
     
-    # tablist = display.tablist(data)
+    tablist = report_display.tablist(data)
     
     # seletable_columns = []
     # for t in data['tables']:
@@ -93,9 +93,9 @@ def overview(request):
         # filter_html = filter_html,
         # orderbys    = list(display.orderbys(data)),
         # query_key   = display.query_key(data),
-        # report_id    = report_id,
+        report_id    = report_id,
         
-        # tablist = tablist,
+        tablist = tablist,
         # seletable_columns = seletable_columns,
         
         # html_f = html_f,

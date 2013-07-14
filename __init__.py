@@ -149,5 +149,8 @@ def report_views(config):
         renderer='templates/report/list.pt', permission='concision')
     config.add_view(report.new, route_name='concision.report.new',
         renderer='templates/report/new.pt', permission='concision')
-    config.add_view(report.new, route_name='concision.report.add_new', renderer='templates/queries/new.pt', permission='concision_edit')
-    config.add_view(report.overview, route_name='concision.report.overview', renderer='templates/queries/overview.pt', permission='concision_edit')
+    config.add_view(report.new, route_name='concision.report.add_new', renderer='templates/report/new.pt', permission='concision_edit')
+    config.add_view(report.overview, route_name='concision.report.overview', renderer='templates/report/overview.pt', permission='concision_edit')
+    
+    # Queries
+    config.add_route('concision.report.queries', '/concision/report/queries/{report_id}')

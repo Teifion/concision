@@ -1,0 +1,248 @@
+<div metal:use-macro="layout">
+    <style type="text/css" media="screen" metal:fill-slot="css">
+        .tooltip_right
+        {
+            float: right;
+            width: 400px;
+            border-left: 1px dotted #555;
+            padding-left: 20px;
+        }
+        
+        .main_content
+        {
+            float: left;
+            width: 620px;
+        }
+        
+        .query_table
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EFE;
+        }
+        
+        .query_column
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EEF;
+        }
+        
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
+        .query_orderby
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #EFF;
+        }
+        
+        .query_groupby
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEF;
+        }
+        
+        .query_key
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FFE;
+        }
+        
+        select {min-width: 100px;}
+        
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
+        
+        
+        /* Filter stuff */
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
+        .filter_group, .filter_item
+        {
+            border: 1px solid #BBB;
+            margin-left: 30px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            padding: 5px 5px;
+            
+            /*
+            margin-left: 15px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            padding: 5px 5px;
+            */
+        }
+        
+        .filter_group
+        {
+            border: 1px solid #BBB;
+        }
+        
+        .group_type
+        {
+            font-weight: bold;
+        }
+        
+        .filter_item
+        {
+            border: 1px solid #CCC;
+        }
+        
+        .filter_item:hover
+        {
+            border: 1px solid #AAA;
+        }
+        
+        .del_link
+        {
+            cursor: pointer;
+            color: #C00;
+            text-decoration: none;
+            border: 1px solid #C00;
+        }
+        
+        .del_link:hover
+        {
+            color: #FFF;
+            background-color: #A00;
+            border: 1px solid #700;
+        }
+        
+        .add_link
+        {
+            cursor: pointer;
+            color: #090;
+            text-decoration: none;
+            border: 1px solid #090;
+        }
+        
+        .add_link:hover
+        {
+            color: #FFF;
+            background-color: #070;
+            border: 1px solid #040;
+        }
+        
+        .add_group_link
+        {
+            cursor: pointer;
+            color: #009;
+            text-decoration: none;
+            border: 1px solid #009;
+        }
+        
+        .add_group_link:hover
+        {
+            color: #FFF;
+            background-color: #007;
+            border: 1px solid #004;
+        }
+        
+    </style>
+    <div metal:fill-slot="header_buttons" style="display:inline-block;">
+        <a class="inbutton homebutton" href="${request.route_url('concision.menu')}">Concision home</a>
+        <a class="inbutton docbutton" href="${request.route_url('concision.doc.menu')}">Documentation</a>
+    </div>
+    <div metal:fill-slot="content">
+        <script type="text/javascript" charset="utf-8">
+            $(document).ready(function() {
+                var $tabs = $("#tab_container").tabs();
+                
+                /*
+                $('#tables_tooltip').load("${request.route_url('concision.tooltip', page='tables')}");
+                $('#columns_tooltip').load("${request.route_url('concision.tooltip', page='columns')}");
+                $('#filters_tooltip').load("${request.route_url('concision.tooltip', page='filters')}");
+                
+                $('#graphing_tooltip').load("${request.route_url('concision.tooltip', page='graphing')}");
+                $('#groupby_tooltip').load("${request.route_url('concision.tooltip', page='groupby')}");
+                $('#orderby_tooltip').load("${request.route_url('concision.tooltip', page='orderby')}");
+                $('#join_tooltip').load("${request.route_url('concision.tooltip', page='join')}");
+                */
+            });
+        </script>
+        
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.view', report_id=report_id)}" tal:condition="'execute' in tablist">View results</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.raw', report_id=report_id)}" tal:condition="'execute' in tablist">View raw query</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.raw', report_id=report_id)}" tal:condition="'execute' in tablist">Export</a>
+        <a style="float:right;" class="inbutton" href="${request.route_url('concision.query.graph', report_id=report_id)}" tal:condition="'view_graph' in tablist">Graph</a>
+        <br /><br /><br /><br />
+        
+        <div id="tab_container" style="clear:right">
+            <ul>
+                <li tal:condition="'queries' in tablist"><a href="#queries">Queries</a></li>
+                
+                <li><a href="#other">Other</a></li>
+            </ul>
+            
+            <div id="queries" tal:condition="'queries' in tablist">
+                <div class="tooltip_right">
+                    <div id="tables_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <div tal:repeat="t tables" class="query_table" tal:condition="False">
+                        <a href="${request.route_url('concision.query.do_table', report_id=report_id)}?table=${t['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
+                        
+                        ${t['name']}:
+                    </div>
+                    
+                    <a href="${request.route_url('concision.report.queries', report_id=report_id)}" class="inbutton">Edit queries</a>
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            
+            <div id="other">
+                <div class="tooltip_right">
+                    <div id="other_tooltip">
+                        &nbsp;
+                    </div>
+                </div>
+                
+                <div class="main_content">
+                    <form action="${request.route_url('concision.query.do_other', report_id=the_query.id)}" method="post" accept-charset="utf-8">
+                        <input type="hidden" name="action" id="action" value="edit" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="query_name">Query name:</label></td>
+                                <td style="padding:2px;"><input type="text" name="query_name" id="query_name" value="${the_query.name}" /></td>
+                            </tr>
+                        </table>
+                        
+                        <input type="submit" value="Submit" name="form.submitted" class="inbutton" />
+                    </form>
+                    
+                    <br /><br />
+                    <hr />
+                    <br /><br />
+                    <a href="${request.route_url('concision.query.delete', report_id=the_query.id)}" class="inbutton red_button">Delete query</a><br />
+                    <br /><br />
+                </div>
+                <div style="clear:both;">&nbsp;</div>
+            </div>
+            
+            <!-- End of tabs -->
+        </div>
+    </div>
+</div>
