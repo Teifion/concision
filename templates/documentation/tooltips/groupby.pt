@@ -4,4 +4,7 @@ Grouping allows you to combine the results of several values into one, e.g. the 
 For each column you must either make it a grouped column or select an aggregate function. Any column selected as a grouping will be included in the results, anything with an aggregate function will have all the grouped values combined using the selected function.
 <br /><br />
 
+If all columns are set to "Group by" then the query will not use grouping.
+<br /><br />
+
 <a href="${request.route_url('concision.doc.page', page='group_by')}">Grouping documentation</a>

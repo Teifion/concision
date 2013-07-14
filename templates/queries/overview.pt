@@ -35,6 +35,13 @@
             background-color: #FEE;
         }
         
+        .query_groupby
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEF;
+        }
+        
         .query_key
         {
             padding: 10px;
@@ -51,21 +58,96 @@
             background-color: #FEE;
         }
         
+        
+        
+        /* Filter stuff */
+        .query_filter
+        {
+            padding: 10px;
+            margin: 5px;
+            background-color: #FEE;
+        }
+        
         .filter_group, .filter_item
         {
             border: 1px solid #BBB;
-            margin: 10px 5px 10px 20px;
+            margin-left: 30px;
+            margin-bottom: 10px;
+            margin-top: 10px;
             padding: 5px 5px;
+            
+            /*
+            margin-left: 15px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            padding: 5px 5px;
+            */
         }
         
-        .filter_group {border: 1px solid #BBB;}
-        .group_type {font-weight: bold;}
-        .filter_item {border: 1px solid #CCC;}
-        .filter_item:hover {border: 1px solid #AAA;}
+        .filter_group
+        {
+            border: 1px solid #BBB;
+        }
         
-        .del_link {display:none;}
-        .add_link {display:none;}
-        .add_group_link {display:none;}
+        .group_type
+        {
+            font-weight: bold;
+        }
+        
+        .filter_item
+        {
+            border: 1px solid #CCC;
+        }
+        
+        .filter_item:hover
+        {
+            border: 1px solid #AAA;
+        }
+        
+        .del_link
+        {
+            cursor: pointer;
+            color: #C00;
+            text-decoration: none;
+            border: 1px solid #C00;
+        }
+        
+        .del_link:hover
+        {
+            color: #FFF;
+            background-color: #A00;
+            border: 1px solid #700;
+        }
+        
+        .add_link
+        {
+            cursor: pointer;
+            color: #090;
+            text-decoration: none;
+            border: 1px solid #090;
+        }
+        
+        .add_link:hover
+        {
+            color: #FFF;
+            background-color: #070;
+            border: 1px solid #040;
+        }
+        
+        .add_group_link
+        {
+            cursor: pointer;
+            color: #009;
+            text-decoration: none;
+            border: 1px solid #009;
+        }
+        
+        .add_group_link:hover
+        {
+            color: #FFF;
+            background-color: #007;
+            border: 1px solid #004;
+        }
         
     </style>
     <div metal:fill-slot="header_buttons" style="display:inline-block;">
@@ -135,6 +217,10 @@
                 </div>
                 
                 <div class="main_content">
+                    <h3>Selected columns</h3>
+                    <div tal:condition="columns == []">
+                        You currently have no columns in this query.
+                    </div>
                     <div tal:repeat="c columns" class="query_column">
                         <a href="${request.route_url('concision.query.do_column', query_id=query_id)}?column=${c['id']}&amp;action=delete" class="icbutton red_button" style="float:right;">Remove</a>
                         
@@ -144,12 +230,147 @@
                         ${c['name']}
                     </div>
                     
-                    <a href="${request.route_url('concision.query.columns', query_id=query_id)}" class="inbutton">Edit columns</a>
+                    <br /><br />
+                    <h3>New column</h3>
+                    <form action="${request.route_url('concision.query.do_column', query_id=query_id)}" method="post" accept-charset="utf-8">
+                        <input type="hidden" name="action" id="action" value="add" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="column">Field:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("column", seletable_columns)}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="function">Function 1:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function">Function 2:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function">Function 3:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="submit" value="Add" name="form.submitted" class="inbutton" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
             
             <div id="filters" tal:condition="'filters' in tablist">
+                <script type="text/javascript" charset="utf-8">
+                    function new_item (f)
+                    {
+                        $("#group_" + f).append($("#new_item_form").html());
+                        $("#group_" + f + " > form > input:first").val(f);
+                    }
+                    
+                    function new_group (f)
+                    {
+                        $("#group_" + f).append($("#new_group_form").html());
+                        $("#group_" + f + " > form > input:first").val(f);
+                    }
+                </script>
+                
+                <div style="display:none" id="new_item_form">
+                    <form action="${request.route_url('concision.query.do_filter', query_id=query_id)}" method="post" accept-charset="utf-8" class="filter_item">
+                        <input type="hidden" name="item_id" value="-1" />
+                        <input type="hidden" name="action" value="add_item" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="column">Field:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("column", seletable_columns)}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function">Function 1:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function0", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function">Function 2:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function1", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td><label for="function">Function 3:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("function2", consts.non_group_funcs, insert_dud="None")}
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td tal:condition="2">&nbsp;</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><label for="operator">Operator:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("operator", consts.operators)}
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td tal:condition="2">&nbsp;</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><label for="value">Value:</label></td>
+                                <td>
+                                    <input type="text" name="value" id="value" value="" />
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2">
+                                    <input type="submit" value="Add" name="form.submitted" class="inbutton" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                
+                <div style="display:none" id="new_group_form">
+                    <form action="${request.route_url('concision.query.do_filter', query_id=query_id)}" method="post" accept-charset="utf-8" class="filter_group">
+                        <input type="hidden" name="item_id" value="-1" />
+                        <input type="hidden" name="action" value="add_group" />
+                        
+                        <table border="0" cellspacing="0" cellpadding="5">
+                            <tr>
+                                <td><label for="type">Type:</label></td>
+                                <td>
+                                    ${structure:html_f.option_box("type", consts.filter_types)}
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2">
+                                    <input type="submit" value="Add" name="form.submitted" class="inbutton" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                
                 <div class="tooltip_right">
                     <div id="filters_tooltip">
                         &nbsp;
@@ -160,8 +381,6 @@
                     <div style="margin-left:-10px;">
                         ${structure:filter_html}
                     </div>
-                    
-                    <a href="${request.route_url('concision.query.filters', query_id=query_id)}" class="inbutton">Edit filters</a>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -174,9 +393,7 @@
                 </div>
                 
                 <div class="main_content">
-                    This section is still under construction.
-                    <br /><br />
-                    <br /><br />
+                    &nbsp;
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>
@@ -189,9 +406,60 @@
                 </div>
                 
                 <div class="main_content">
-                    This section is still under construction.
-                    <br /><br />
-                    <br /><br />
+                    <script type="text/javascript" charset="utf-8" tal:condition="False">
+                        function group_by_toggle_func ()
+                        {
+                            var checked = $('#group_by_toggle').is(':checked');
+                            
+                            if (checked)
+                            {
+                                $('#group_by_container').show();
+                            }
+                            else
+                            {
+                                $('#group_by_container').hide();
+                            }
+                        }
+                        
+                        $(document).ready(function() {
+                            group_by_toggle_func();
+                        });
+                    </script>
+                    
+                    <form action="${request.route_url('concision.query.do_groupby', query_id=the_query.id)}" method="post" accept-charset="utf-8">
+                        <div tal:condition="data['key'] != None" class="query_groupby">
+                            <strong>
+                            ${query_key['table']}:
+                            &nbsp;&nbsp;&nbsp;
+                            
+                            ${query_key['name']}
+                            </strong>
+                            
+                            &nbsp;&nbsp;
+                            &#8594;
+                            &nbsp;&nbsp;
+                            
+                            ${structure:html_f.option_box("key", consts.group_funcs, custom_id="key_group_col", selected=data.get('groupby_key'))}
+                        </div>
+                        
+                        <div tal:repeat="c columns" class="query_groupby">
+                            <strong>
+                            ${c['table']}:
+                            &nbsp;&nbsp;&nbsp;
+                            
+                            ${c['name']}
+                            </strong>
+                            
+                            &nbsp;&nbsp;
+                            &#8594;
+                            &nbsp;&nbsp;
+                            
+                            ${structure:html_f.option_box(c['id'], consts.group_funcs, custom_id="%s_group_col" % c['id'], selected=data['groupby'][c['id']])}
+                        </div>
+                        
+                        <div style="clear:left;">&nbsp;</div>
+                        <input type="submit" value="Save grouping changes" name="form.submitted" class="inbutton"/>
+                    </form>
                 </div>
                 <div style="clear:both;">&nbsp;</div>
             </div>

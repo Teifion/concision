@@ -1,5 +1,6 @@
 from pyramid.httpexceptions import HTTPFound
 # from pyramid.response import Response
+from collections import defaultdict
 
 from pyramid.renderers import get_renderer
 
@@ -67,7 +68,20 @@ def overview(request):
     
     tablist = display.tablist(data)
     
+    seletable_columns = []
+    for t in data['tables']:
+        the_source = config['sources'][t]
+        seletable_columns.extend([("%s.%s" % (t, c), "%s %s" % (the_source.label, the_source.column_labels.get(c, c))) for c in the_source.columns])
+    
     filter_html = display.filter_html(data['filters']).replace("[query_id]", str(query_id))
+    
+    # Grouping by
+    selected_columns = defaultdict(list)
+    for s in data['tables']:
+        prelude = lambda c: '%s.%s' % (s, c) in data.get('columns', []) or '%s.%s' % (s, c) == data.get('key', "")
+        
+        the_source = config['sources'][s]
+        selected_columns[s] = list(filter(prelude, the_source.columns))
     
     return dict(
         title       = "Concision query",
@@ -75,19 +89,14 @@ def overview(request):
         the_user    = the_user,
         the_query   = the_query,
         data        = data,
-        tables      = display.tables(data),
-        columns     = display.columns(data),
+        tables      = list(display.tables(data)),
+        columns     = list(display.columns(data)),
         filter_html = filter_html,
         query_key   = display.query_key(data),
         query_id    = query_id,
         
         tablist = tablist,
-        # sources   = config['sources'],
-        # selected_columns = selected_columns,
-        # relevant_sources = relevant_sources,
-        
-        # current_source_joins = current_source_joins,
-        # possible_source_joins = possible_source_joins,
+        seletable_columns = seletable_columns,
         
         html_f = html_f,
         consts = consts,
@@ -183,6 +192,9 @@ def filters(request):
         query_id  = query_id,
     )
 
+def groupby(request):
+    pass
+
 def graphing(request):
     the_user = config['get_user_func'](request)
     layout   = get_renderer(config['layout']).implementation()
@@ -209,7 +221,7 @@ def graphing(request):
         the_user  = the_user,
         the_query = the_query,
         data      = data,
-        filters   = display.filters(data),
+        # filters   = display.filters(data),
         
         keyable_columns = keyable_columns,
         selected_key = selected_key,

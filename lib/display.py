@@ -70,6 +70,7 @@ def columns(data):
             "id": i,
             "name": "%s %s" % (" ".join(func_labels), source.column_labels[column]),
             "table": source.label,
+            "sql_name": "%s.%s" % (table, column),
         }
         
         yield r
@@ -109,6 +110,7 @@ def query_key(data):
     r = {
         "name": "%s %s" % (" ".join(func_labels), source.column_labels[column]),
         "table": source.label,
+        "sql_name": "%s.%s" % (table, column),
     }
     
     return r

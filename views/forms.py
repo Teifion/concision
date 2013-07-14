@@ -67,6 +67,7 @@ def column(request):
     
     action = request.params['action']
     existing_columns = the_query.jdata.get('columns', [])
+    existing_groupbys = the_query.jdata.get('groupby', [])
     
     if action == "add":
         new_column = " ".join(filter(None, (
@@ -77,20 +78,24 @@ def column(request):
         )))
         
         existing_columns.append(new_column)
+        existing_groupbys.append("-")
         
     elif action == "delete":
         column_id = int(request.params['column'])
+        
         existing_columns = existing_columns[:column_id] + existing_columns[column_id+1:]
+        existing_groupbys = existing_groupbys[:column_id] + existing_groupbys[column_id+1:]
         
     else:
         raise KeyError("No handler for action of '%s'" % action)
     
     the_query.jdata['columns'] = existing_columns
+    the_query.jdata['groupby'] = existing_groupbys
     the_query.compress_data()
     
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#columns" % request.route_url("concision.query.columns", query_id=query_id))
+    return HTTPFound(location="%s#columns" % request.route_url("concision.query.overview", query_id=query_id))
 
 def filters(request):
     request.do_not_log = True
@@ -142,7 +147,29 @@ def filters(request):
     
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#filters" % request.route_url("concision.query.filters", query_id=query_id))
+    return HTTPFound(location="%s#filters" % request.route_url("concision.query.overview", query_id=query_id))
+
+def groupby(request):
+    request.do_not_log = True
+    
+    query_id  = int(request.matchdict['query_id'])
+    the_query = config['DBSession'].query(StoredQuery).filter(StoredQuery.id == query_id).first()
+    data = the_query.extract_data()
+    
+    groupbys = []
+    
+    if 'key' in request.params:
+        the_query.jdata['groupby_key'] = request.params['key']
+    
+    for i, c in enumerate(data['columns']):
+        groupbys.append(request.params[str(i)])
+    
+    the_query.jdata['groupby'] = groupbys
+    the_query.compress_data()
+    
+    config['DBSession'].add(the_query)
+    
+    return HTTPFound(location="%s#groupby" % request.route_url("concision.query.overview", query_id=query_id))
 
 def do_key(request):
     request.do_not_log = True
@@ -165,6 +192,8 @@ def do_key(request):
         
     elif action == "delete":
         new_key = None
+        if 'groupby_key' in the_query.jdata:
+            del(the_query.jdata['groupby_key'])
         
     else:
         raise KeyError("No handler for action of '%s'" % action)
@@ -174,4 +203,4 @@ def do_key(request):
     
     config['DBSession'].add(the_query)
     
-    return HTTPFound(location="%s#graphing" % request.route_url("concision.query.graphing", query_id=query_id))
+    return HTTPFound(location="%s#graphing" % request.route_url("concision.query.overview", query_id=query_id))
