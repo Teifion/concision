@@ -25,6 +25,7 @@ class CQuery(object):
         extends the filters so the alias will be linked to.
         """
         total_columns = data['columns'] + [data['key']] + filter_funcs.get_columns(data['filters'])
+        total_columns.extend([o['column'] for o in data['orderby']])
         
         for table_column in filter(None, total_columns):
             f, t, c = converters.get_parts(table_column)
