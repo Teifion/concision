@@ -172,14 +172,23 @@ def build(data):
         q.order_bys.append(order_func)
     
     # Grouping by
-    if data['group_by']:
-        potential_groupings = list(data['columns'])
-        if data['key'] != None:
-            potential_groupings.append(data['key'])
+    if any(map(lambda g: g != "-", data['groupby'] + [data.get('groupby_key', "-")])):
+        new_columns = []
         
-        prelude = lambda i: data['group_by_funcs'].get(i, "-") == "-"
-        for pg in filter(prelude, potential_groupings):
-            q.group_bys.append(q.get(pg, pure=True))
+        for i, c in enumerate(q.columns):
+            if i == len(q.columns)-1 and data['key'] != None:
+                grp = data['groupby_key']
+            else:
+                grp = data['groupby'][i]
+                
+            if grp == "-":
+                new_columns.append(c)
+                q.group_bys.append(c)
+                
+            else:
+                new_columns.append(consts.function_lookup[grp](c))
+        
+        q.columns = new_columns
     
     if len(q.columns) == 0:
         return [], q
